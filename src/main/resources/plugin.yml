@@ -1,0 +1,7 @@
+name: JoinLeavePlus
+version: '1.0'
+main: me.abradee.joinLeavePlus.JoinLeavePlus
+api-version: '1.21'
+authors: [ abradee ]
+description: my first plugin written in java
+website: abradee.github.io
