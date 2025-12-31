@@ -1,23 +1,33 @@
 package me.abradee.joinLeavePlus.Listeners;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class JoinLeaveListener implements Listener {
+
+    private final LegacyComponentSerializer serializer =
+            LegacyComponentSerializer.legacyAmpersand();
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         String name = e.getPlayer().getName();
 
         if (!e.getPlayer().hasPlayedBefore()) {
-            e.joinMessage(Component.text("+ ", NamedTextColor.GOLD, TextDecoration.BOLD).append(Component.text(name, NamedTextColor.AQUA, TextDecoration.BOLD)).append(Component.text(" joined for the first time!", NamedTextColor.YELLOW)));
+            String msg = JavaPlugin.getProvidingPlugin(getClass())
+                    .getConfig().getString("first-time-join");
+            e.joinMessage(serializer.deserialize(
+                    msg.replace("%player%", name)
+            ));
         } else {
-            e.joinMessage(Component.text("+ ", NamedTextColor.GREEN, TextDecoration.BOLD).append(Component.text(name, NamedTextColor.GREEN)).append(Component.text(" has joined.", NamedTextColor.GRAY)));
+            String msg = JavaPlugin.getProvidingPlugin(getClass())
+                    .getConfig().getString("join");
+            e.joinMessage(serializer.deserialize(
+                    msg.replace("%player%", name)
+            ));
         }
     }
 
@@ -25,6 +35,10 @@ public class JoinLeaveListener implements Listener {
     public void onPlayerLeave(PlayerQuitEvent e) {
         String name = e.getPlayer().getName();
 
-        e.quitMessage(Component.text("- ", NamedTextColor.RED, TextDecoration.BOLD).append(Component.text(name, NamedTextColor.RED)).append(Component.text(" has left.", NamedTextColor.GRAY)));
+        String msg = JavaPlugin.getProvidingPlugin(getClass())
+                .getConfig().getString("leave");
+        e.quitMessage(serializer.deserialize(
+                msg.replace("%player%", name)
+        ));
     }
 }
