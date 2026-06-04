@@ -9,7 +9,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="JoinLeavePlus" target="21" />
+      <module name="JoinLeavePlus" target="25" />
     </bytecodeTargetLevel>
   </component>
 </project>

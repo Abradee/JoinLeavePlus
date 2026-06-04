@@ -11,7 +11,7 @@ public final class JoinLeavePlus extends JavaPlugin {
         saveDefaultConfig();
         getLogger().info("JoinLeavePlus is initializing...");
         getServer().getPluginManager().registerEvents(new JoinLeaveListener(), this);
-        getCommand("about-management").setExecutor(new AboutCommand());
+        getCommand("about-joinleaveplus").setExecutor(new AboutCommand());
         getLogger().info("The plugin has started.\nFeel free to donate through https://ko-fi.com/Abradee");
     }
 
