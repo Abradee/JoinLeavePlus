@@ -1,7 +1,7 @@
 name: JoinLeavePlus
 version: 1.2
 main: me.abradee.joinLeavePlus.JoinLeavePlus
-api-version: '1.21'
+api-version: '26.1'
 authors: [ abradee ]
 description: Plugin that changes the join/leave messages with a configured message.
 website: https://modrinth.com/plugins/joinleaveplus
