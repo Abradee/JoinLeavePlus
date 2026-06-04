@@ -1,3 +1,12 @@
+#    __     _     __                    _____ _
+# __|  |___|_|___|  |   ___ ___ _ _ ___|  _  | |_ _ ___
+#|  |  | . | |   |  |__| -_| .'| | | -_|   __| | | |_ -|
+#|_____|___|_|_|_|_____|___|__,|\_/|___|__|  |_|___|___|
+# v1.2
+# developed by abradee
+# (c) 2020-2026 abradee
+# (c) 2025-2026 JoinLeavePlus under GPL-3.0 license
+
 first-time-join: "&6&l[+] &b&l%player% &ejoined for the first time!"
 join: "&a&l[+] &a%player% &7has joined."
 leave: "&c&l[-] &c%player% &7has left."

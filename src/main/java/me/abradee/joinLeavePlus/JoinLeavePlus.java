@@ -1,6 +1,7 @@
 package me.abradee.joinLeavePlus;
 
 import me.abradee.joinLeavePlus.Listeners.JoinLeaveListener;
+import me.abradee.joinLeavePlus.Commands.AboutCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class JoinLeavePlus extends JavaPlugin {
@@ -8,9 +9,10 @@ public final class JoinLeavePlus extends JavaPlugin {
     @Override
     public void onEnable() {
         saveDefaultConfig();
-        getLogger().info("The plugin is starting...");
+        getLogger().info("JoinLeavePlus is initializing...");
         getServer().getPluginManager().registerEvents(new JoinLeaveListener(), this);
-        getLogger().info("The plugin has started.");
+        getCommand("about-management").setExecutor(new AboutCommand());
+        getLogger().info("The plugin has started.\nFeel free to donate through https://ko-fi.com/Abradee");
     }
 
     @Override
