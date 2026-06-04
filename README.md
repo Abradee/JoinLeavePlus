@@ -1,5 +1,5 @@
 # JoinLeavePlus
-[![Patreon]([https://shields.io](https://img.shields.io/badge/Support%20On%20Patreon%20-8A2BE2))](https://patreon.com)
+[![Patreon](https://img.shields.io/badge/Support%20On%20Patreon-8A2BE2)](https://patreon.com/abradee)
 
 
 This is a simple plugin that will change the Minecraft Paper server's join and leave messages to simple different ones listed with images of them below.
