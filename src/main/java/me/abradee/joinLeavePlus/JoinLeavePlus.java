@@ -12,11 +12,11 @@ public final class JoinLeavePlus extends JavaPlugin {
         getLogger().info("JoinLeavePlus is initializing...");
         getServer().getPluginManager().registerEvents(new JoinLeaveListener(), this);
         getCommand("about-joinleaveplus").setExecutor(new AboutCommand());
-        getLogger().info("The plugin has started.\nFeel free to donate through https://ko-fi.com/Abradee");
+        getLogger().info("The plugin has started.\nFeel free to donate through https://patreon.com/abradee");
     }
 
     @Override
     public void onDisable() {
-        getLogger().info("The plugin has stopped.");
+        getLogger().info("The plugin has stopped.\nThanks for using JoinLeavePlus!");
     }
 }

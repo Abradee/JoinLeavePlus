@@ -7,6 +7,8 @@
 # (c) 2020-2026 abradee
 # (c) 2025-2026 JoinLeavePlus under GPL-3.0 license
 
-first-time-join: "&6&l[+] &b&l%player% &ejoined for the first time!"
-join: "&a&l[+] &a%player% &7has joined."
-leave: "&c&l[-] &c%player% &7has left."
+# Configure your join and leave messages here!
+# Note: supports EITHER MiniMessage or legacy formatting
+first-time-join: "<gold><b>[+] </b><aqua>%player% <yellow>joined for the first time!"
+join: "<green><b>[+] </b><green>%player% <gray>has joined."
+leave: "<red><b>[-] </b><red>%player% <gray>has left."
