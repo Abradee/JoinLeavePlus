@@ -17,8 +17,13 @@ public class JoinLeaveListener implements Listener {
         String name = e.getPlayer().getName();
 
         if (!e.getPlayer().hasPlayedBefore()) {
-            String msg = JavaPlugin.getProvidingPlugin(getClass()).getConfig().getString("first-time-join")
-                    .replace("%player%", name);
+            java.util.List<String> firstMessages = JavaPlugin.getProvidingPlugin(getClass())
+                    .getConfig().getStringList("first-time-join");
+
+            if (firstMessages.isEmpty()) return;
+
+            int firstIndex = java.util.concurrent.ThreadLocalRandom.current().nextInt(firstMessages.size());
+            String msg = firstMessages.get(firstIndex).replace("%player%", name);;
 
             var serializer = msg.contains("<")
                     ? net.kyori.adventure.text.minimessage.MiniMessage.miniMessage()
@@ -26,8 +31,13 @@ public class JoinLeaveListener implements Listener {
 
             e.joinMessage(serializer.deserialize(msg));
         } else {
-            String msg = JavaPlugin.getProvidingPlugin(getClass()).getConfig().getString("join")
-                    .replace("%player%", name);
+            java.util.List<String> joinMessages = JavaPlugin.getProvidingPlugin(getClass())
+                    .getConfig().getStringList("join");
+
+            if (joinMessages.isEmpty()) return;
+
+            int joinIndex = java.util.concurrent.ThreadLocalRandom.current().nextInt(joinMessages.size());
+            String msg = joinMessages.get(joinIndex).replace("%player%", name);
 
             var serializer = msg.contains("<")
                     ? net.kyori.adventure.text.minimessage.MiniMessage.miniMessage()
@@ -41,8 +51,13 @@ public class JoinLeaveListener implements Listener {
     public void onPlayerLeave(PlayerQuitEvent e) {
         String name = e.getPlayer().getName();
 
-        String msg = JavaPlugin.getProvidingPlugin(getClass()).getConfig().getString("leave")
-                .replace("%player%", name);
+        java.util.List<String> leaveMessages = JavaPlugin.getProvidingPlugin(getClass())
+                .getConfig().getStringList("leave");
+
+        if (leaveMessages.isEmpty()) return;
+
+        int leaveIndex = java.util.concurrent.ThreadLocalRandom.current().nextInt(leaveMessages.size());
+        String msg = leaveMessages.get(leaveIndex).replace("%player%", name);
 
         var serializer = msg.contains("<")
                 ? net.kyori.adventure.text.minimessage.MiniMessage.miniMessage()
