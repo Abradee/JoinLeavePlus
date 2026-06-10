@@ -6,6 +6,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.title.Title;
+import java.time.Duration;
 
 public class JoinLeaveListener implements Listener {
 
@@ -17,33 +21,61 @@ public class JoinLeaveListener implements Listener {
         String name = e.getPlayer().getName();
 
         if (!e.getPlayer().hasPlayedBefore()) {
-            java.util.List<String> firstMessages = JavaPlugin.getProvidingPlugin(getClass())
-                    .getConfig().getStringList("first-time-join");
+            java.util.List<String> firstMessages = JavaPlugin.getProvidingPlugin(getClass()).getConfig().getStringList("first-time-join");
+            java.util.List<String> firstMessagesTitle = JavaPlugin.getProvidingPlugin(getClass()).getConfig().getStringList("first-time-join-title");
+            java.util.List<String> firstMessagesSubtitle = JavaPlugin.getProvidingPlugin(getClass()).getConfig().getStringList("first-time-join-subtitle"); // Fixed typo here
 
             if (firstMessages.isEmpty()) return;
 
             int firstIndex = java.util.concurrent.ThreadLocalRandom.current().nextInt(firstMessages.size());
-            String msg = firstMessages.get(firstIndex).replace("%player%", name);;
+            String msg = firstMessages.get(firstIndex).replace("%player%", name);
+
+            String titleMsg = firstMessagesTitle.size() > firstIndex ? firstMessagesTitle.get(firstIndex).replace("%player%", name) : "";
+            String subtitleMsg = firstMessagesSubtitle.size() > firstIndex ? firstMessagesSubtitle.get(firstIndex).replace("%player%", name) : "";
 
             var serializer = msg.contains("<")
                     ? net.kyori.adventure.text.minimessage.MiniMessage.miniMessage()
                     : net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacyAmpersand();
 
             e.joinMessage(serializer.deserialize(msg));
+            JavaPlugin.getProvidingPlugin(getClass()).getLogger().info(" [debug] sent join message: " + name + ".");
+
+            if (!titleMsg.isEmpty() || !subtitleMsg.isEmpty()) {
+                net.kyori.adventure.title.Title title = net.kyori.adventure.title.Title.title(
+                        serializer.deserialize(titleMsg),
+                        serializer.deserialize(subtitleMsg)
+                );
+                e.getPlayer().showTitle(title);
+                JavaPlugin.getProvidingPlugin(getClass()).getLogger().info(" [debug] sent title to " + name + ".");
+            }
         } else {
-            java.util.List<String> joinMessages = JavaPlugin.getProvidingPlugin(getClass())
-                    .getConfig().getStringList("join");
+            java.util.List<String> joinMessages = JavaPlugin.getProvidingPlugin(getClass()).getConfig().getStringList("join");
+            java.util.List<String> joinMessagesTitle = JavaPlugin.getProvidingPlugin(getClass()).getConfig().getStringList("join-title");
+            java.util.List<String> joinMessagesSubtitle = JavaPlugin.getProvidingPlugin(getClass()).getConfig().getStringList("join-subtitle");
 
             if (joinMessages.isEmpty()) return;
 
             int joinIndex = java.util.concurrent.ThreadLocalRandom.current().nextInt(joinMessages.size());
             String msg = joinMessages.get(joinIndex).replace("%player%", name);
 
+            String titleMsg = joinMessagesTitle.size() > joinIndex ? joinMessagesTitle.get(joinIndex).replace("%player%", name) : "";
+            String subtitleMsg = joinMessagesSubtitle.size() > joinIndex ? joinMessagesSubtitle.get(joinIndex).replace("%player%", name) : "";
+
             var serializer = msg.contains("<")
                     ? net.kyori.adventure.text.minimessage.MiniMessage.miniMessage()
                     : net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacyAmpersand();
 
             e.joinMessage(serializer.deserialize(msg));
+            JavaPlugin.getProvidingPlugin(getClass()).getLogger().info(" [debug] sent join message: " + name + ".");
+
+            if (!titleMsg.isEmpty() || !subtitleMsg.isEmpty()) {
+                net.kyori.adventure.title.Title title = net.kyori.adventure.title.Title.title(
+                        serializer.deserialize(titleMsg),
+                        serializer.deserialize(subtitleMsg)
+                );
+                e.getPlayer().showTitle(title);
+                JavaPlugin.getProvidingPlugin(getClass()).getLogger().info(" [debug] sent title to " + name + ".");
+            }
         }
     }
 

@@ -8,6 +8,8 @@
 
 # Configure your join and leave messages here!
 # Note: supports EITHER MiniMessage or legacy formatting
+
+# CHAT MESSAGES
 first-time-join:
   - "<gold><b>[+] </b><aqua>%player% </aqua><gradient:#ffff55:#ffaa00>joined for the first time!</gradient> <white>Welcome aboard!</white>"
   - "<gold><b>[+] </b><aqua>%player% </aqua><gray>is new here!</gray> <yellow>Say hello and show them around!</yellow>"
@@ -23,7 +25,12 @@ leave:
   - "<red><b>[-] </b><red>%player% </red><gray>disconnected from the planet.</gray>"
   - "<red><b>[-] </b><red>%player% </red><gradient:#ff5555:#ffffff>has vanished into thin air.</gradient>"
 
-# OLD CONFIGS
-#first-time-join: "<gold><b>[+] </b><aqua>%player% <yellow>joined for the first time!"
-#join: "<green><b>[+] </b><green>%player% <gray>has joined."
-#leave: "<red><b>[-] </b><red>%player% <gray>has left."
+# TITLE MESSAGES
+join-title:
+  - "<green><b>Welcome to the server!</b></green>"
+join-subtitle:
+  - "Have fun!"
+first-time-join-title:
+  - "<green><b>Welcome to the server!</b></green>"
+first-time-join-subtitle:
+  - "Check out the server!"
