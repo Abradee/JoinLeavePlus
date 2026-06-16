@@ -41,22 +41,44 @@ public class JoinLeaveListener implements Listener {
         } else {
             java.util.List<String> joinMessages = JavaPlugin.getProvidingPlugin(getClass())
                     .getConfig().getStringList("join");
-            java.util.List<String> joinMessagesTitle = JavaPlugin.getProvidingPlugin(getClass())
+            java.util.List<String> joinMessagesTitleList = JavaPlugin.getProvidingPlugin(getClass())
                     .getConfig().getStringList("join-title");
-            java.util.List<String> joinMessagesSubtitle = JavaPlugin.getProvidingPlugin(getClass())
+            java.util.List<String> joinMessagesSubtitleList = JavaPlugin.getProvidingPlugin(getClass())
                     .getConfig().getStringList("join-subtitle");
 
             if (joinMessages.isEmpty()) return;
 
             int joinIndex = java.util.concurrent.ThreadLocalRandom.current().nextInt(joinMessages.size());
             String msg = joinMessages.get(joinIndex).replace("%player%", name);
-            joinMessagesTitle = joinMessagesTitle.replace("%player%", name);
 
-            var serializer = msg.contains("<")
+            int titleIndex = java.util.concurrent.ThreadLocalRandom.current().nextInt(joinMessagesTitleList.size());
+            String singleTitleMessage = joinMessagesTitleList.get(titleIndex).replace("%player%", name);
+            int subtitleIndex = java.util.concurrent.ThreadLocalRandom.current().nextInt(joinMessagesSubtitleList.size());
+            String singleSubtitleMessage = joinMessagesSubtitleList.get(subtitleIndex).replace("%player%", name);
+
+            var joinMessageSerializer = msg.contains("<")
                     ? net.kyori.adventure.text.minimessage.MiniMessage.miniMessage()
                     : net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacyAmpersand();
 
-            e.joinMessage(serializer.deserialize(msg));
+            e.joinMessage(joinMessageSerializer.deserialize(msg));
+
+            if (!singleTitleMessage.isEmpty() || !singleSubtitleMessage.isEmpty()) {
+                var titleMessageSerializer = singleTitleMessage.contains("<")
+                        ? net.kyori.adventure.text.minimessage.MiniMessage.miniMessage()
+                        : net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacyAmpersand();
+
+                var subtitleMessageSerializer = singleSubtitleMessage.contains("<")
+                        ? net.kyori.adventure.text.minimessage.MiniMessage.miniMessage()
+                        : net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacyAmpersand();
+
+                Component mainTitle = singleTitleMessage.isEmpty() ? Component.empty() : titleMessageSerializer.deserialize(singleTitleMessage);
+                Component subTitle = singleSubtitleMessage.isEmpty() ? Component.empty() : subtitleMessageSerializer.deserialize(singleSubtitleMessage);
+
+                Title.Times times = Title.Times.times(Duration.ofMillis(500), Duration.ofMillis(3500), Duration.ofMillis(1000));
+                Title fullTitle = Title.title(mainTitle, subTitle, times);
+
+                e.getPlayer().showTitle(fullTitle);
+        }
         }
     }
 
