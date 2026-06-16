@@ -1,6 +1,6 @@
 # JoinLeavePlus Update Soon!
 
-## Jun 25 - v1.5
+## Jun 18 - v1.5
 
 ## Changes Coming
 - Show titles with subtitles on join (configurable)
