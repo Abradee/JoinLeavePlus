@@ -34,3 +34,7 @@ first-time-join-title:
   - "<green><b>Welcome to the server!</b></green>"
 first-time-join-subtitle:
   - "Check out the server!"
+
+# SOUNDS
+first-join-sound: "minecraft:ui.toast.challenge_complete"
+join-sound: "minecraft:entity.experience_orb.pickup"

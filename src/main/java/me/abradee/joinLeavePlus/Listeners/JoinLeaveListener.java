@@ -23,7 +23,8 @@ public class JoinLeaveListener implements Listener {
         org.bukkit.entity.Player player = e.getPlayer();
 
         if (!player.hasPlayedBefore()) {
-            Sound firstJoinSound = Sound.sound(Key.key("minecraft:ui.toast.challenge_complete"), Sound.Source.PLAYER, 1f, 1f);
+            String firstSoundKey = JavaPlugin.getProvidingPlugin(getClass()).getConfig().getString("first-join-sound", "minecraft:ui.toast.challenge_complete");
+            Sound firstJoinSound = Sound.sound(Key.key(firstSoundKey), Sound.Source.PLAYER, 1f, 1f);
 
             java.util.List<String> firstMessages = JavaPlugin.getProvidingPlugin(getClass()).getConfig().getStringList("first-time-join");
             java.util.List<String> firstMessagesTitleList = JavaPlugin.getProvidingPlugin(getClass()).getConfig().getStringList("first-time-join-title");
@@ -65,7 +66,8 @@ public class JoinLeaveListener implements Listener {
                 player.showTitle(fullTitle);
             }
         } else {
-            Sound joinSound = Sound.sound(Key.key("minecraft:entity.experience_orb.pickup"), Sound.Source.PLAYER, 1f, 1f);
+            String joinSoundKey = JavaPlugin.getProvidingPlugin(getClass()).getConfig().getString("join-sound", "minecraft:entity.experience_orb.pickup");
+            Sound joinSound = Sound.sound(Key.key(joinSoundKey), Sound.Source.PLAYER, 1f, 1f);
 
             java.util.List<String> joinMessages = JavaPlugin.getProvidingPlugin(getClass()).getConfig().getStringList("join");
             java.util.List<String> joinMessagesTitleList = JavaPlugin.getProvidingPlugin(getClass()).getConfig().getStringList("join-title");
