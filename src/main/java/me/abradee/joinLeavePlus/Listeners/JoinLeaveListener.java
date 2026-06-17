@@ -7,9 +7,10 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.title.Title;
 import java.time.Duration;
+import net.kyori.adventure.sound.Sound;
+import net.kyori.adventure.key.Key;
 
 public class JoinLeaveListener implements Listener {
 
@@ -19,32 +20,56 @@ public class JoinLeaveListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         String name = e.getPlayer().getName();
+        org.bukkit.entity.Player player = e.getPlayer();
 
-        if (!e.getPlayer().hasPlayedBefore()) {
-            java.util.List<String> firstMessages = JavaPlugin.getProvidingPlugin(getClass())
-                    .getConfig().getStringList("first-time-join");
-            java.util.List<String> firstMessagesTitle = JavaPlugin.getProvidingPlugin(getClass())
-                    .getConfig().getStringList("first-time-join-title");
-            java.util.List<String> firstMessagesSubtitle = JavaPlugin.getProvidingPlugin(getClass())
-                    .getConfig().getStringList("first-time-join-subtitle");
+        if (!player.hasPlayedBefore()) {
+            Sound firstJoinSound = Sound.sound(Key.key("minecraft:ui.toast.challenge_complete"), Sound.Source.PLAYER, 1f, 1f);
+
+            java.util.List<String> firstMessages = JavaPlugin.getProvidingPlugin(getClass()).getConfig().getStringList("first-time-join");
+            java.util.List<String> firstMessagesTitleList = JavaPlugin.getProvidingPlugin(getClass()).getConfig().getStringList("first-time-join-title");
+            java.util.List<String> firstMessagesSubtitleList = JavaPlugin.getProvidingPlugin(getClass()).getConfig().getStringList("first-time-join-subtitle");
 
             if (firstMessages.isEmpty()) return;
 
             int firstIndex = java.util.concurrent.ThreadLocalRandom.current().nextInt(firstMessages.size());
             String msg = firstMessages.get(firstIndex).replace("%player%", name);
 
-            var serializer = msg.contains("<")
+            int firstTitleIndex = java.util.concurrent.ThreadLocalRandom.current().nextInt(firstMessagesTitleList.size());
+            String singleFirstTitleMessage = firstMessagesTitleList.get(firstTitleIndex).replace("%player%", name);
+            int firstSubtitleIndex = java.util.concurrent.ThreadLocalRandom.current().nextInt(firstMessagesSubtitleList.size());
+            String singleFirstSubtitleMessage = firstMessagesSubtitleList.get(firstSubtitleIndex).replace("%player%", name);
+
+            var firstJoinMessageSerializer = msg.contains("<")
                     ? net.kyori.adventure.text.minimessage.MiniMessage.miniMessage()
                     : net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacyAmpersand();
 
-            e.joinMessage(serializer.deserialize(msg));
+            e.joinMessage(firstJoinMessageSerializer.deserialize(msg));
+
+            player.playSound(firstJoinSound);
+
+            if (!singleFirstTitleMessage.isEmpty() || !singleFirstSubtitleMessage.isEmpty()) {
+                var firstTitleMessageSerializer = singleFirstTitleMessage.contains("<")
+                        ? net.kyori.adventure.text.minimessage.MiniMessage.miniMessage()
+                        : net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacyAmpersand();
+
+                var firstSubtitleMessageSerializer = singleFirstSubtitleMessage.contains("<")
+                        ? net.kyori.adventure.text.minimessage.MiniMessage.miniMessage()
+                        : net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacyAmpersand();
+
+                Component firstMainTitle = singleFirstTitleMessage.isEmpty() ? Component.empty() : firstTitleMessageSerializer.deserialize(singleFirstTitleMessage);
+                Component firstSubTitle = singleFirstSubtitleMessage.isEmpty() ? Component.empty() : firstSubtitleMessageSerializer.deserialize(singleFirstSubtitleMessage);
+
+                Title.Times times = Title.Times.times(Duration.ofMillis(500), Duration.ofMillis(3500), Duration.ofMillis(1000));
+                Title fullTitle = Title.title(firstMainTitle, firstSubTitle, times);
+
+                player.showTitle(fullTitle);
+            }
         } else {
-            java.util.List<String> joinMessages = JavaPlugin.getProvidingPlugin(getClass())
-                    .getConfig().getStringList("join");
-            java.util.List<String> joinMessagesTitleList = JavaPlugin.getProvidingPlugin(getClass())
-                    .getConfig().getStringList("join-title");
-            java.util.List<String> joinMessagesSubtitleList = JavaPlugin.getProvidingPlugin(getClass())
-                    .getConfig().getStringList("join-subtitle");
+            Sound joinSound = Sound.sound(Key.key("minecraft:entity.experience_orb.pickup"), Sound.Source.PLAYER, 1f, 1f);
+
+            java.util.List<String> joinMessages = JavaPlugin.getProvidingPlugin(getClass()).getConfig().getStringList("join");
+            java.util.List<String> joinMessagesTitleList = JavaPlugin.getProvidingPlugin(getClass()).getConfig().getStringList("join-title");
+            java.util.List<String> joinMessagesSubtitleList = JavaPlugin.getProvidingPlugin(getClass()).getConfig().getStringList("join-subtitle");
 
             if (joinMessages.isEmpty()) return;
 
@@ -62,6 +87,8 @@ public class JoinLeaveListener implements Listener {
 
             e.joinMessage(joinMessageSerializer.deserialize(msg));
 
+            player.playSound(joinSound);
+
             if (!singleTitleMessage.isEmpty() || !singleSubtitleMessage.isEmpty()) {
                 var titleMessageSerializer = singleTitleMessage.contains("<")
                         ? net.kyori.adventure.text.minimessage.MiniMessage.miniMessage()
@@ -77,8 +104,8 @@ public class JoinLeaveListener implements Listener {
                 Title.Times times = Title.Times.times(Duration.ofMillis(500), Duration.ofMillis(3500), Duration.ofMillis(1000));
                 Title fullTitle = Title.title(mainTitle, subTitle, times);
 
-                e.getPlayer().showTitle(fullTitle);
-        }
+                player.showTitle(fullTitle);
+            }
         }
     }
 
