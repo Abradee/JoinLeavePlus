@@ -1,6 +1,5 @@
 package me.abradee.joinLeavePlus.Listeners;
 
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -13,9 +12,6 @@ import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.key.Key;
 
 public class JoinLeaveListener implements Listener {
-
-    private final LegacyComponentSerializer serializer =
-            LegacyComponentSerializer.legacyAmpersand();
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
