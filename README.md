@@ -1,8 +1,5 @@
 [![Patreon](https://img.shields.io/badge/Support%20On%20Patreon-8A2BE2)](https://patreon.com/abradee)
 
-## Update Coming June 18
-Read more [here](https://github.com/Abradee/JoinLeavePlus/blob/main/new.md).
----
 
 This is a simple plugin that will change the Minecraft Paper server's join and leave messages to custom ones that are configurable. Here are images of the defaults:
 
