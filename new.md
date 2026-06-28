@@ -1,5 +1,7 @@
 # Project To-Do List
 
+This is everything that I am going to do at some point in time with this project. If you want to help, try and contribute :3
+
 1. Organize Listener Code
 2. Finish About Page
 3. Rewrite Description
