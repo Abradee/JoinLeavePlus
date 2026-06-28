@@ -14,7 +14,7 @@ This is a simple plugin that will change the Minecraft server's join and leave m
 
 ![Leave text](https://cdn.modrinth.com/data/cached_images/6ff913530795e1cd8462920c8a745196e9f62402.png)
 
-## Join title
+### Join title
 ![Join title](https://cdn.modrinth.com/data/cached_images/7351cec00f329a7d104955e2e176dc2a7dd06bb8_0.webp)
 
 
