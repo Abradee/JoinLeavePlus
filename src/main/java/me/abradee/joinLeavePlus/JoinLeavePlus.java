@@ -1,6 +1,6 @@
 package me.abradee.joinLeavePlus;
 
-import me.abradee.joinLeavePlus.Listeners.MainListener;
+import me.abradee.joinLeavePlus.Listeners.*;
 import me.abradee.joinLeavePlus.Commands.AboutCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
