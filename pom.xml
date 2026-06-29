@@ -6,7 +6,11 @@
 
     <groupId>me.abradee</groupId>
     <artifactId>JoinLeavePlus</artifactId>
+<<<<<<< Updated upstream
     <version>1.5.1</version>
+=======
+    <version>1.5.2</version>
+>>>>>>> Stashed changes
     <packaging>jar</packaging>
 
     <name>JoinLeavePlus</name>
