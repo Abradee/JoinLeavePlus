@@ -28,7 +28,7 @@ There are lots of ways that you can help with the development of JoinLeavePlus!
 4. Write your own code and submit it with a PR (Pull Request)
 
 ### Using issues
-You can submit and comment on an issue to ask if it can be yours. If you want to assign one to yourself, just comment on it and someone might get it assigned to you. Just make sure that no one else has it assigned to them before you ask for it. And, don't break the rules of contributing. 
+You can submit and comment on an issue to ask if it can be yours. If you want to assign one to yourself, just comment on it and someone might get it assigned to you. Just make sure that no one else has it assigned to them before you ask for it. And, don't break the rules of contributing. I do have a little tasklist of things that I'm trying to get done in the issues tab, just comment on one if you want to do it. It helps a lot!
 
 ### How to report bugs
 Reporting bugs from this repo is crazy easy and self explanatory. Just go to the top bar, and click `Issues` and submit an issue
