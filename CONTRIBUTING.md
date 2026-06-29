@@ -3,17 +3,18 @@
 
 *By contributing to this repo, you agree to the rules.*
 
-Here you can learn the best ways to contribute and help with this project! Contributing is greatly appreciated if it's not breaking anything! :3
+Here you can learn the best ways to contribute and help with this project! Contributing is greatly appreciated if it's not breaking anything!
 
 ## Rules of Contributing
 These are the rules that you must follow if you contribute to this repository in any way. 
 1. Do not put spam PRs or issues, we will get to the eventually
-2. Don't put broken code. Test it before you submit.
-3. Don't suggest features that already exist.
-4. Don't put a PR or issue that already exists. Read before you submit.
-5. Don't put unnecessary code that has no purpose.
-6. Comment your code and be descriptive of what you're making.
-7. Follow the AI guidelines
+2. Wait for the issue to be assigned to you. You can ask for some issues to be yours if you know how to do it and no one else has it assigned yet.
+3. Don't put broken code. Test it before you submit.
+4. Don't suggest features that already exist.
+5. Don't put a PR or issue that already exists. Read before you submit.
+6. Don't put unnecessary code that has no purpose.
+7. Comment your code and be descriptive of what you're making.
+8. Follow the AI guidelines
 
 ### AI usage guidelines
 The use of AI isn't 100% discouraged when contributing, but don't fully write scripts and code with just AI. As some people might know, AI makes a lot of mistakes, so check it's code before you submit it. You can check it's code by just testing it on your own test Minecraft server.
@@ -25,6 +26,9 @@ There are lots of ways that you can help with the development of JoinLeavePlus!
 2. Report bugs
 3. Suggest an enhancement/feature
 4. Write your own code and submit it with a PR (Pull Request)
+
+### Using issues
+You can submit and comment on an issue to ask if it can be yours. If you want to assign one to yourself, just comment on it and someone might get it assigned to you. Just make sure that no one else has it assigned to them before you ask for it. And, don't break the rules of contributing. 
 
 ### How to report bugs
 Reporting bugs from this repo is crazy easy and self explanatory. Just go to the top bar, and click `Issues` and submit an issue
