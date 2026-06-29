@@ -11,7 +11,7 @@ import java.time.Duration;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.key.Key;
 
-public class JoinLeaveListener implements Listener {
+public class MainListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
