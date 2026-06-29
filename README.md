@@ -1,6 +1,6 @@
 [![Patreon](https://img.shields.io/badge/Support%20On%20Patreon-8A2BE2)](https://patreon.com/abradee)
 
-This is a simple plugin that will change the Minecraft server's join and leave messages to custom ones that are configurable. Here are images of the defaults:
+JoinLeavePlus is a very easy to use and lightweight plugin for your Minecraft server that allows you to customize some events that happen when a player joins or leaves. It can change chat join messages, titles on join, sounds on join, and more to come! 
 
 ### First time join text
 
@@ -8,7 +8,7 @@ This is a simple plugin that will change the Minecraft server's join and leave m
 
 ### Join text
 
-![Join text](https://cdn.modrinth.com/data/cached_images/918aacb4f4dc71765e7f4449f7fb418c1d90ab99.png)
+![Join text|274](https://cdn.modrinth.com/data/cached_images/918aacb4f4dc71765e7f4449f7fb418c1d90ab99.png)
 
 ### Leave text
 
@@ -28,7 +28,7 @@ You can now customize the titles that show to a player when they join! You can e
 
 ## How to configure sounds
 
-There are sounds that you can configure in JoinLeavePlus, that you can set in the config. If you want to change it from the default, go to the config and set it to a sound ID like ` minecraft:entity.experience_orb.pickup `. The config also allows setting different sounds for if a player has joined before or not.
+There are sounds that you can configure in JoinLeavePlus, that you can set in the config. If you want to change it from the default, go to the config and set it to a sound ID like ` minecraft:entity.experience_orb.pickup`. The config also allows setting different sounds for if a player has joined before or not.
 
 Location: 
 ```
