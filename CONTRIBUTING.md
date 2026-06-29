@@ -46,4 +46,4 @@ Submitting code that you write is very helpful and greatly appreciated if you do
 
 
 # Thanks for contributing to JoinLeavePlus :3
-As I said before contributing is greatly appreciated and helps me a lot.
+As I said before contributing is greatly appreciated and helps me a lot. Thanks!
