@@ -18,6 +18,7 @@ public final class JoinLeavePlus extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        getLogger().info("The plugin has stopped.\nThanks for using JoinLeavePlus!");
+        getLogger().info("The plugin has stopped.");
+        getLogger().info("Thanks for using JoinLeavePlus!");
     }
 }
