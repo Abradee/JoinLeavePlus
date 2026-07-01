@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>me.abradee</groupId>
     <artifactId>JoinLeavePlus</artifactId>
-    <version>1.5.2</version>
+    <version>1.5.3</version>
     <packaging>jar</packaging>
 
     <name>JoinLeavePlus</name>
@@ -63,6 +63,10 @@
             <artifactId>paper-api</artifactId>
             <version>1.21.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
-        </dependency>
+        </dependency> <dependency>
+        <groupId>de.clickism</groupId>
+        <artifactId>modrinth-update-checker</artifactId>
+        <version>1.0</version>
+    </dependency>
     </dependencies>
 </project>
