@@ -1,4 +1,4 @@
-package me.abradee.joinLeavePlus.Listeners;
+package me.abradee.joinLeavePlus.Listeners.FirstJoin;
 
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;

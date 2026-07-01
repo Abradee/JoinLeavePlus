@@ -1,5 +1,6 @@
-package me.abradee.joinLeavePlus.Listeners;
+package me.abradee.joinLeavePlus.Listeners.FirstJoin;
 
+import me.abradee.joinLeavePlus.Listeners.Join.JoinSoundListener;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import net.kyori.adventure.sound.Sound;

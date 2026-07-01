@@ -1,4 +1,4 @@
-package me.abradee.joinLeavePlus.Listeners;
+package me.abradee.joinLeavePlus.Listeners.Join;
 
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
