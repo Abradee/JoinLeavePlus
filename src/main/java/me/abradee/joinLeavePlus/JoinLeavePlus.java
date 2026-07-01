@@ -22,7 +22,7 @@ public final class JoinLeavePlus extends JavaPlugin {
                 .checkVersion(latestVersion -> {
                     String currentVersion = getDescription().getVersion();
 
-                    if (currentVersion.contains("-SNAPSHOT")) {
+                    if (currentVersion.contains("-BUILD")) {
                         getLogger().warning("Running a development build (" + currentVersion + "). Skipping update check.");
                         return;
                     }

@@ -38,3 +38,11 @@ first-time-join-subtitle:
 # SOUNDS
 first-join-sound: "minecraft:ui.toast.challenge_complete"
 join-sound: "minecraft:entity.experience_orb.pickup"
+
+# BOOKS
+book-title: "Welcome To the Server"
+book-author: "Server"
+book-pages:
+  - "Page one content"
+  - "Page two content"
+  - "Page three content"
