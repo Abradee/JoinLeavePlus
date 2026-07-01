@@ -68,5 +68,6 @@
         <artifactId>modrinth-update-checker</artifactId>
         <version>1.0</version>
     </dependency>
+
     </dependencies>
 </project>
