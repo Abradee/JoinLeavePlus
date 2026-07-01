@@ -6,7 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import de.clickism.modrinthupdatechecker.ModrinthUpdateChecker;
 
 // includes other code from clickism's ModrinthUpdateChecker
-// check LICENSE or check Github
+// check LICENSE or check on GitHub
 
 public final class JoinLeavePlus extends JavaPlugin {
 
