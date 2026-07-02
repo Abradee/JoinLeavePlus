@@ -24,6 +24,7 @@ public final class JoinLeavePlus extends JavaPlugin {
 
                     if (currentVersion.contains("-BUILD") || currentVersion.contains("-SNAPSHOT")) {
                         getLogger().warning("Running a development build (" + currentVersion + "). Skipping update check.");
+                        getLogger().warning("Development builds are NOT for anything outside of testing. See");
                         return;
                     }
 
