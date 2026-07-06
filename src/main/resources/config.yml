@@ -40,9 +40,14 @@ first-join-sound: "minecraft:ui.toast.challenge_complete"
 join-sound: "minecraft:entity.experience_orb.pickup"
 
 # BOOKS
+# This field is recommended to be used for showing rules and server info to the player on the first time they join.
 book-title: "Welcome To the Server"
 book-author: "Server"
 book-pages:
-  - "Page one content"
+  - "Page one content
+  indentation because why not
+  another one
+  1. i ate a frog
+  2. dont touch my chickens"
   - "Page two content"
   - "Page three content"
