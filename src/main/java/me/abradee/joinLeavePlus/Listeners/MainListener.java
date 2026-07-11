@@ -33,7 +33,10 @@ public class MainListener implements Listener {
         if (!player.hasPlayedBefore()) {
             if (useFirstJoinMessages) {
                 FirstJoinMessageListener.handle(e, name);
+            } else {
+                e.setJoinMessage(null);
             }
+
             if (useFirstJoinSounds) {
                 FirstJoinSoundListener.handle(player);
             }
@@ -46,7 +49,10 @@ public class MainListener implements Listener {
         } else {
             if (useJoinMessages) {
                 JoinMessageListener.handle(e, name);
+            } else {
+                e.setJoinMessage(null);
             }
+
             if (useJoinSounds) {
                 JoinSoundListener.handle(player);
             }
@@ -64,6 +70,8 @@ public class MainListener implements Listener {
 
         if (useLeaveMessages) {
             LeaveMessageListener.handle(e, name);
+        } else {
+            e.setQuitMessage(null);
         }
     }
 }
