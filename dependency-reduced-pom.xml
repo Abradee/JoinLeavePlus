@@ -4,7 +4,7 @@
   <groupId>me.abradee</groupId>
   <artifactId>JoinLeavePlus</artifactId>
   <name>JoinLeavePlus</name>
-  <version>1.6.1-BUILD-2</version>
+  <version>1.6.1</version>
   <build>
     <defaultGoal>clean package</defaultGoal>
     <resources>
