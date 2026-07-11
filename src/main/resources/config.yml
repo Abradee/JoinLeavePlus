@@ -10,6 +10,7 @@
 # Note: supports EITHER MiniMessage or legacy formatting
 
 # TOGGLES
+# You either put true or false here. It is case sensitive and needs to be all lowercase.
 first-time-join-messages: true
 join-messages: true
 leave-messages: true
