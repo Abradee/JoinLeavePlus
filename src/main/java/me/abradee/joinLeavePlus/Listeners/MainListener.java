@@ -27,31 +27,30 @@ public class MainListener implements Listener {
         Boolean useJoinTitles = JavaPlugin.getProvidingPlugin(FirstJoinMessageListener.class).getConfig().getBoolean("join-titles");
         Boolean useJoinSounds = JavaPlugin.getProvidingPlugin(FirstJoinMessageListener.class).getConfig().getBoolean("join-sounds");
 
-
         Player player = e.getPlayer();
         String name = player.getName();
 
         if (!player.hasPlayedBefore()) {
-            if (useFirstJoinMessages = true ) {
+            if (useFirstJoinMessages) {
                 FirstJoinMessageListener.handle(e, name);
             }
-            if (useFirstJoinSounds = true ) {
+            if (useFirstJoinSounds) {
                 FirstJoinSoundListener.handle(player);
             }
-            if (useFirstJoinTitles = true ) {
+            if (useFirstJoinTitles) {
                 FirstJoinTitleListener.handle(player, name);
             }
-            if (useFirstJoinBooks = true ) {
+            if (useFirstJoinBooks) {
                 FirstJoinBookListener.handle(e, name);
             }
         } else {
-            if (useJoinMessages = true ) {
+            if (useJoinMessages) {
                 JoinMessageListener.handle(e, name);
             }
-            if (useJoinSounds = true ) {
+            if (useJoinSounds) {
                 JoinSoundListener.handle(player);
             }
-            if (useJoinTitles = true ) {
+            if (useJoinTitles) {
                 JoinTitleListener.handle(player, name);
             }
         }
@@ -63,7 +62,7 @@ public class MainListener implements Listener {
         Player player = e.getPlayer();
         String name = player.getName();
 
-        if (useLeaveMessages = true ) {
+        if (useLeaveMessages) {
             LeaveMessageListener.handle(e, name);
         }
     }
