@@ -9,6 +9,14 @@
 # Configure your join and leave messages here!
 # Note: supports EITHER MiniMessage or legacy formatting
 
+# TOGGLES
+first-time-join-messages: true
+join-messages: true
+leave-messages: true
+first-time-join-sounds: true
+join-sounds: true
+first-time-join-books: true
+
 # CHAT MESSAGES
 first-time-join:
   - "<gold><b>[+] </b><aqua>%player% </aqua><gradient:#ffff55:#ffaa00>joined for the first time!</gradient> <white>Welcome aboard!</white>"
@@ -46,6 +54,6 @@ join-sound: "minecraft:entity.experience_orb.pickup"
 book-title: "Welcome To the Server"
 book-author: "Server"
 book-pages:
-  - "Page one content"
-  - "Page two content"
-  - "Page three content"
+  - "If you see this, report to your server administrator to either toggle the books off or write something here."
+  - "If you see this, report to your server administrator to either toggle the books off or write something here."
+  - "If you see this, report to your server administrator to either toggle the books off or write something here."
