@@ -19,28 +19,52 @@ public class MainListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
-        String useFirstJoinMessages = JavaPlugin.getProvidingPlugin(FirstJoinMessageListener.class).getConfig().getString("first-time-join-messages");
+        Boolean useFirstJoinMessages = JavaPlugin.getProvidingPlugin(FirstJoinMessageListener.class).getConfig().getBoolean("first-time-join-messages");
+        Boolean useFirstJoinBooks = JavaPlugin.getProvidingPlugin(FirstJoinMessageListener.class).getConfig().getBoolean("first-time-join-books");
+        Boolean useFirstJoinSounds = JavaPlugin.getProvidingPlugin(FirstJoinMessageListener.class).getConfig().getBoolean("first-time-join-sounds");
+        Boolean useFirstJoinTitles = JavaPlugin.getProvidingPlugin(FirstJoinMessageListener.class).getConfig().getBoolean("first-time-join-titles");
+        Boolean useJoinMessages = JavaPlugin.getProvidingPlugin(FirstJoinMessageListener.class).getConfig().getBoolean("join-messages");
+        Boolean useJoinTitles = JavaPlugin.getProvidingPlugin(FirstJoinMessageListener.class).getConfig().getBoolean("join-titles");
+        Boolean useJoinSounds = JavaPlugin.getProvidingPlugin(FirstJoinMessageListener.class).getConfig().getBoolean("join-sounds");
+
 
         Player player = e.getPlayer();
         String name = player.getName();
 
         if (!player.hasPlayedBefore()) {
-            FirstJoinMessageListener.handle(e, name);
-            FirstJoinSoundListener.handle(player);
-            FirstJoinTitleListener.handle(player, name);
-            FirstJoinBookListener.handle(e, name);
+            if (useFirstJoinMessages = true ) {
+                FirstJoinMessageListener.handle(e, name);
+            }
+            if (useFirstJoinSounds = true ) {
+                FirstJoinSoundListener.handle(player);
+            }
+            if (useFirstJoinTitles = true ) {
+                FirstJoinTitleListener.handle(player, name);
+            }
+            if (useFirstJoinBooks = true ) {
+                FirstJoinBookListener.handle(e, name);
+            }
         } else {
-            JoinMessageListener.handle(e, name);
-            JoinSoundListener.handle(player);
-            JoinTitleListener.handle(player, name);
+            if (useJoinMessages = true ) {
+                JoinMessageListener.handle(e, name);
+            }
+            if (useJoinSounds = true ) {
+                JoinSoundListener.handle(player);
+            }
+            if (useJoinTitles = true ) {
+                JoinTitleListener.handle(player, name);
+            }
         }
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e) {
+        Boolean useLeaveMessages = JavaPlugin.getProvidingPlugin(FirstJoinMessageListener.class).getConfig().getBoolean("leave-messages");
         Player player = e.getPlayer();
         String name = player.getName();
 
-        LeaveMessageListener.handle(e, name);
+        if (useLeaveMessages = true ) {
+            LeaveMessageListener.handle(e, name);
+        }
     }
 }

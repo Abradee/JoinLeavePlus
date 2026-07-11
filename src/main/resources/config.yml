@@ -13,9 +13,14 @@
 first-time-join-messages: true
 join-messages: true
 leave-messages: true
+
 first-time-join-sounds: true
 join-sounds: true
+
 first-time-join-books: true
+
+first-time-join-titles: true
+join-titles: true
 
 # CHAT MESSAGES
 first-time-join:
