@@ -116,14 +116,12 @@ hr.solid {
 
 /* Rounded border */
 hr.rounded {
-  /* 1. Decrease this number to make it thinner (e.g., 3px or 4px) */
-  border-top: 3px solid #bbb; 
+  border: none;                /* 1. Clear out all default browser borders */
+  background-color: #bbb;      /* 2. Give it a solid color */
+  height: 3px;                 /* 3. Set your exact thickness here (e.g., 2px, 3px, 4px) */
   
-  /* 2. Increase the width to make it longer */
-  width: 80%; /* Or use a larger pixel value like 600px, 700px, etc. */
-  
-  /* 3. Increase radius if you want it to look perfectly pill-shaped */
-  border-radius: 5px; 
+  width: 80%;                  /* 4. Make it longer (or use something like 600px) */
+  border-radius: 10px;         /* 5. Keeps the ends perfectly rounded */
   
   margin: 20px auto; 
 }
