@@ -1,4 +1,4 @@
-/* i used ai for the css because im dumb lmao */
+/* includes ai generated stylesheets */
 
 body {
   background: #111;
@@ -118,4 +118,8 @@ hr.solid {
 hr.rounded {
   border-top: 8px solid #bbb;
   border-radius: 5px;
+  
+  width: 120px;
+  
+  margin: 20px auto; 
 }
