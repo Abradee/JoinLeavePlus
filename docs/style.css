@@ -114,14 +114,19 @@ hr.solid {
   border-top: 3px solid #bbb;
 }
 
-/* Rounded border */
+ /* Rounded border */
 hr.rounded {
-  border: none;                /* 1. Clear out all default browser borders */
-  background-color: #bbb;      /* 2. Give it a solid color */
-  height: 3px;                 /* 3. Set your exact thickness here (e.g., 2px, 3px, 4px) */
+  border: none !important;
+  background-color: #bbb !important;
   
-  width: 80%;                  /* 4. Make it longer (or use something like 600px) */
-  border-radius: 10px;         /* 5. Keeps the ends perfectly rounded */
+  /* Force the thickness */
+  height: 3px !important; 
   
-  margin: 20px auto; 
+  /* Force the length (adjust 300px to whatever length you want) */
+  width: 300px !important; 
+  
+  /* Keeps the edges soft */
+  border-radius: 99px !important; 
+  
+  margin: 20px auto !important;
 }
