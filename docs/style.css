@@ -123,7 +123,7 @@ hr.rounded {
   height: 3px !important; 
   
   /* Force the length (adjust 300px to whatever length you want) */
-  width: 300px !important; 
+  width: 512px !important; 
   
   /* Keeps the edges soft */
   border-radius: 99px !important; 
