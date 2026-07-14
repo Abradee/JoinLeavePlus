@@ -36,8 +36,7 @@ Location:
 ```
 
 Default config: 
-```
-#    __     _     __                    _____ _
+```#    __     _     __                    _____ _
 # __|  |___|_|___|  |   ___ ___ _ _ ___|  _  | |_ _ ___
 #|  |  | . | |   |  |__| -_| .'| | | -_|   __| | | |_ -|
 #|_____|___|_|_|_|_____|___|__,|\_/|___|__|  |_|___|___|
@@ -47,6 +46,20 @@ Default config:
 
 # Configure your join and leave messages here!
 # Note: supports EITHER MiniMessage or legacy formatting
+
+# TOGGLES
+# You either put true or false here. It is case sensitive and needs to be all lowercase.
+first-time-join-messages: true
+join-messages: true
+leave-messages: true
+
+first-time-join-sounds: true
+join-sounds: true
+
+first-time-join-books: true
+
+first-time-join-titles: true
+join-titles: true
 
 # CHAT MESSAGES
 first-time-join:
@@ -77,4 +90,14 @@ first-time-join-subtitle:
 # SOUNDS
 first-join-sound: "minecraft:ui.toast.challenge_complete"
 join-sound: "minecraft:entity.experience_orb.pickup"
-```
+
+# BOOKS
+# This field is recommended to be used for showing rules and server info to the player on the first time they join.
+# \n works for newlines, \t works for tabs, you can also use EITHER MiniMessage or Legacy Color Coding. Not both message formats.
+
+book-title: "Welcome To the Server"
+book-author: "Server"
+book-pages:
+  - "If you see this, report to your server administrator to either toggle the books off or write something here."
+  - "If you see this, report to your server administrator to either toggle the books off or write something here."
+  - "If you see this, report to your server administrator to either toggle the books off or write something here."```

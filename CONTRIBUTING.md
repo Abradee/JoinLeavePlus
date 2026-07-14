@@ -7,7 +7,7 @@ Here you can learn the best ways to contribute and help with this project! Contr
 
 ## Rules of Contributing
 These are the rules that you must follow if you contribute to this repository in any way. 
-1. Do not put spam PRs or issues, we will get to the eventually
+1. Do not put spam PRs or issues, we will get to it eventually
 2. Wait for the issue to be assigned to you. You can ask for some issues to be yours if you know how to do it and no one else has it assigned yet.
 3. Don't put broken code. Test it before you submit.
 4. Don't suggest features that already exist.
