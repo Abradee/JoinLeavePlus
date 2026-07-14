@@ -117,7 +117,7 @@ hr.solid {
 /* Rounded border */
 hr.rounded {
   border-top: 8px solid #bbb;
-  border-radius: 2px;
+  border-radius: 1px;
   
   width: 120px;
   
