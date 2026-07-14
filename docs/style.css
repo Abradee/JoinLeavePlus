@@ -130,3 +130,16 @@ hr.rounded {
   
   margin: 20px auto !important;
 }
+
+/*plop*/
+.rounded-divider {
+  display: block;
+  background-color: #bbb;
+  
+  /* Sizing - Adjust these numbers freely! */
+  height: 3px;       /* Controls thickness */
+  width: 350px;      /* Controls length */
+  
+  border-radius: 99px;
+  margin: 20px auto;
+}
