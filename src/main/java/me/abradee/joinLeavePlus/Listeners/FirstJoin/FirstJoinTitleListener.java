@@ -21,11 +21,8 @@ public class FirstJoinTitleListener {
         java.util.List<String> firstJoinTitleList = JavaPlugin.getProvidingPlugin(FirstJoinTitleListener.class).getConfig().getStringList("first-time-join-title");
         java.util.List<String> firstJoinSubtitleList = JavaPlugin.getProvidingPlugin(FirstJoinTitleListener.class).getConfig().getStringList("first-time-join-subtitle");
 
-        int firstJoinTitleIndex = java.util.concurrent.ThreadLocalRandom.current().nextInt(firstJoinTitleList.size());
-        String singleFirstJoinTitleMessage = firstJoinTitleList.get(firstJoinTitleIndex).replace("%player%", name);
-
-        int firstJoinSubtitleIndex = java.util.concurrent.ThreadLocalRandom.current().nextInt(firstJoinSubtitleList.size());
-        String singleFirstJoinSubtitleMessage = firstJoinSubtitleList.get(firstJoinSubtitleIndex).replace("%player%", name);
+        String singleFirstJoinTitleMessage = randomMessage(firstJoinTitleList).replace("%player%", name);
+        String singleFirstJoinSubtitleMessage = randomMessage(firstJoinSubtitleList).replace("%player%", name);
 
         if (!singleFirstJoinTitleMessage.isEmpty() || !singleFirstJoinSubtitleMessage.isEmpty()) {
             var firstJoinTitleSerializer = singleFirstJoinTitleMessage.contains("<")
@@ -44,5 +41,12 @@ public class FirstJoinTitleListener {
 
             player.showTitle(firstJoinFullTitle);
         }
+    }
+
+    private static String randomMessage(java.util.List<String> messages) {
+        if (messages.isEmpty()) return "";
+
+        int index = java.util.concurrent.ThreadLocalRandom.current().nextInt(messages.size());
+        return messages.get(index);
     }
 }

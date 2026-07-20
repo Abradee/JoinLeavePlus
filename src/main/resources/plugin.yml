@@ -8,6 +8,15 @@ website: https://modrinth.com/plugins/joinleaveplus
 softdepend: [PlaceholderAPI]
 
 commands:
+  joinleaveplus:
+    description: Opens the in-game JoinLeavePlus configuration menu.
+    usage: /<command> config
+    aliases: [jlp]
   about-joinleaveplus:
     description: A command that displays a detailed about message about the plugin to the executor.
     usage: /<command>
+
+permissions:
+  joinleaveplus.config:
+    description: Allows a player to edit the JoinLeavePlus configuration in-game.
+    default: op
