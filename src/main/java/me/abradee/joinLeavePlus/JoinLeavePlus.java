@@ -12,11 +12,17 @@ package me.abradee.joinLeavePlus;
 
 import me.abradee.joinLeavePlus.Listeners.*;
 import me.abradee.joinLeavePlus.Commands.AboutCommand;
+import me.abradee.joinLeavePlus.Commands.JoinLeavePlusCommand;
+import me.abradee.joinLeavePlus.GUI.ConfigGui;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 import de.clickism.modrinthupdatechecker.ModrinthUpdateChecker;
 
+import java.util.Objects;
+
 
 public final class JoinLeavePlus extends JavaPlugin {
+    private ConfigGui configGui;
 
     @Override
     public void onEnable() {
@@ -24,6 +30,19 @@ public final class JoinLeavePlus extends JavaPlugin {
         getLogger().info("JoinLeavePlus is initializing...");
         getServer().getPluginManager().registerEvents(new MainListener(), this);
         getCommand("about-joinleaveplus").setExecutor(new AboutCommand());
+
+        if (getServer().getPluginManager().isPluginEnabled("ProtocolLib")) {
+            configGui = new ConfigGui(this);
+            getServer().getPluginManager().registerEvents(configGui, this);
+        } else {
+            getLogger().warning("ProtocolLib was not found. The in-game configuration GUI is disabled.");
+        }
+
+        JoinLeavePlusCommand joinLeavePlusCommand = new JoinLeavePlusCommand(configGui);
+        PluginCommand command = Objects.requireNonNull(getCommand("joinleaveplus"), "joinleaveplus command is not registered");
+        command.setExecutor(joinLeavePlusCommand);
+        command.setTabCompleter(joinLeavePlusCommand);
+
         getLogger().info("The plugin has started.");
         getLogger().info("Feel free to donate through https://patreon.com/abradee");
         new ModrinthUpdateChecker("joinleaveplus", "paper", null)
@@ -49,6 +68,9 @@ public final class JoinLeavePlus extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if (configGui != null) {
+            configGui.shutdown();
+        }
         getLogger().info("The plugin has stopped.");
         getLogger().info("Thanks for using JoinLeavePlus!");
     }

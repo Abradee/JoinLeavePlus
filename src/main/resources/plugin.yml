@@ -5,9 +5,18 @@ api-version: '1.20.5'
 authors: [ abradee ]
 description: Plugin that changes the join/leave messages with a configured message.
 website: https://modrinth.com/plugins/joinleaveplus
-softdepend: [PlaceholderAPI]
+softdepend: [PlaceholderAPI, ProtocolLib]
 
 commands:
+  joinleaveplus:
+    description: Opens the in-game JoinLeavePlus configuration menu.
+    usage: /<command> config
+    aliases: [jlp]
   about-joinleaveplus:
     description: A command that displays a detailed about message about the plugin to the executor.
     usage: /<command>
+
+permissions:
+  joinleaveplus.config:
+    description: Allows a player to edit the JoinLeavePlus configuration in-game.
+    default: op
