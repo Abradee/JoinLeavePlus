@@ -51,11 +51,11 @@ public class ConfigGui implements Listener {
     private static final PlainTextComponentSerializer PLAIN_TEXT = PlainTextComponentSerializer.plainText();
 
     private static final Map<Integer, MenuType> MAIN_MENU_ENTRIES = Map.of(
-            10, MenuType.TOGGLES,
-            11, MenuType.MESSAGES,
-            12, MenuType.TITLES,
-            13, MenuType.SOUNDS,
-            14, MenuType.BOOK
+            11, MenuType.TOGGLES,
+            12, MenuType.MESSAGES,
+            13, MenuType.TITLES,
+            14, MenuType.SOUNDS,
+            15, MenuType.BOOK
     );
 
     private static final Map<MenuType, List<MenuSetting>> MENU_SETTINGS = Map.of(
@@ -181,11 +181,11 @@ public class ConfigGui implements Listener {
         fillBackground(inventory);
 
         if (menuType == MenuType.MAIN) {
-            inventory.setItem(10, navigationItem(Material.LEVER, "Feature Toggles", "Enable or disable plugin features."));
-            inventory.setItem(11, navigationItem(Material.OAK_SIGN, "Chat Messages", "Edit join and leave message lists."));
-            inventory.setItem(12, navigationItem(Material.NAME_TAG, "Titles", "Edit join titles and subtitles."));
-            inventory.setItem(13, navigationItem(Material.JUKEBOX, "Sounds", "Choose first-join and join sounds."));
-            inventory.setItem(14, navigationItem(Material.WRITTEN_BOOK, "First Join Book", "Edit the welcome book contents."));
+            inventory.setItem(11, navigationItem(Material.LEVER, "Feature Toggles", "Enable or disable plugin features."));
+            inventory.setItem(12, navigationItem(Material.OAK_SIGN, "Chat Messages", "Edit join and leave message lists."));
+            inventory.setItem(13, navigationItem(Material.NAME_TAG, "Titles", "Edit join titles and subtitles."));
+            inventory.setItem(14, navigationItem(Material.JUKEBOX, "Sounds", "Choose first-join and join sounds."));
+            inventory.setItem(15, navigationItem(Material.WRITTEN_BOOK, "First Join Book", "Edit the welcome book contents."));
             inventory.setItem(BACK_SLOT, navigationItem(Material.BARRIER, "Close", "Close this menu."));
         } else {
             for (MenuSetting menuSetting : MENU_SETTINGS.get(menuType)) {
