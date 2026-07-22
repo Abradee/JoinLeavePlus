@@ -22,6 +22,7 @@ import java.util.Objects;
 
 
 public final class JoinLeavePlus extends JavaPlugin {
+    private ConfigGui configGui;
 
     @Override
     public void onEnable() {
@@ -30,8 +31,13 @@ public final class JoinLeavePlus extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new MainListener(), this);
         getCommand("about-joinleaveplus").setExecutor(new AboutCommand());
 
-        ConfigGui configGui = new ConfigGui(this);
-        getServer().getPluginManager().registerEvents(configGui, this);
+        if (getServer().getPluginManager().isPluginEnabled("ProtocolLib")) {
+            configGui = new ConfigGui(this);
+            getServer().getPluginManager().registerEvents(configGui, this);
+        } else {
+            getLogger().warning("ProtocolLib was not found. The in-game configuration GUI is disabled.");
+        }
+
         JoinLeavePlusCommand joinLeavePlusCommand = new JoinLeavePlusCommand(configGui);
         PluginCommand command = Objects.requireNonNull(getCommand("joinleaveplus"), "joinleaveplus command is not registered");
         command.setExecutor(joinLeavePlusCommand);
@@ -62,6 +68,9 @@ public final class JoinLeavePlus extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if (configGui != null) {
+            configGui.shutdown();
+        }
         getLogger().info("The plugin has stopped.");
         getLogger().info("Thanks for using JoinLeavePlus!");
     }

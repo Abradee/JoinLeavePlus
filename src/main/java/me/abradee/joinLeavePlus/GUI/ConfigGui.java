@@ -10,12 +10,12 @@
 
 package me.abradee.joinLeavePlus.GUI;
 
-import io.papermc.paper.event.player.AsyncChatEvent;
 import me.abradee.joinLeavePlus.JoinLeavePlus;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -24,31 +24,29 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.view.AnvilView;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class ConfigGui implements Listener {
     private static final int MENU_SIZE = 27;
     private static final int BACK_SLOT = 22;
-    private static final int LIST_MENU_SIZE = 54;
-    private static final int LIST_PAGE_SIZE = 45;
-    private static final int LIST_PREVIOUS_SLOT = 45;
-    private static final int LIST_ADD_SLOT = 47;
-    private static final int LIST_BACK_SLOT = 49;
-    private static final int LIST_CLEAR_SLOT = 51;
-    private static final int LIST_NEXT_SLOT = 53;
-    private static final PlainTextComponentSerializer PLAIN_TEXT = PlainTextComponentSerializer.plainText();
+    private static final int ANVIL_RESULT_SLOT = 2;
 
     private static final Map<Integer, MenuType> MAIN_MENU_ENTRIES = Map.of(
             11, MenuType.TOGGLES,
@@ -92,15 +90,23 @@ public class ConfigGui implements Listener {
     );
 
     private final JoinLeavePlus plugin;
-    private final Map<UUID, PendingInput> pendingInputs = new ConcurrentHashMap<>();
+    private final VirtualBookEditor bookEditor;
+    private final Set<UUID> completedAnvilEdits = new HashSet<>();
+    private boolean shuttingDown;
 
     public ConfigGui(JoinLeavePlus plugin) {
         this.plugin = plugin;
+        this.bookEditor = new VirtualBookEditor(plugin);
     }
 
     public void open(Player player) {
-        pendingInputs.remove(player.getUniqueId());
+        bookEditor.cancel(player.getUniqueId());
         openMenu(player, MenuType.MAIN);
+    }
+
+    public void shutdown() {
+        shuttingDown = true;
+        bookEditor.shutdown();
     }
 
     @EventHandler
@@ -110,10 +116,18 @@ public class ConfigGui implements Listener {
         }
 
         event.setCancelled(true);
+        if (!(event.getWhoClicked() instanceof Player player)) {
+            return;
+        }
 
-        if (!(event.getWhoClicked() instanceof Player player)
-                || event.getRawSlot() < 0
-                || event.getRawSlot() >= event.getView().getTopInventory().getSize()) {
+        if (holder.menuType == MenuType.ANVIL_EDITOR) {
+            if (event.getRawSlot() == ANVIL_RESULT_SLOT && event.getView() instanceof AnvilView anvilView) {
+                saveAnvilInput(player, holder.pendingInput, anvilView);
+            }
+            return;
+        }
+
+        if (event.getRawSlot() < 0 || event.getRawSlot() >= event.getView().getTopInventory().getSize()) {
             return;
         }
 
@@ -125,11 +139,6 @@ public class ConfigGui implements Listener {
             } else if (slot == BACK_SLOT) {
                 player.closeInventory();
             }
-            return;
-        }
-
-        if (holder.menuType == MenuType.LIST_EDITOR) {
-            handleListEditorClick(player, event, holder);
             return;
         }
 
@@ -158,21 +167,60 @@ public class ConfigGui implements Listener {
     }
 
     @EventHandler
-    public void onChat(AsyncChatEvent event) {
-        Player player = event.getPlayer();
-        PendingInput pendingInput = pendingInputs.remove(player.getUniqueId());
-        if (pendingInput == null) {
+    public void onPrepareAnvil(PrepareAnvilEvent event) {
+        if (!(event.getInventory().getHolder() instanceof ConfigInventoryHolder holder)
+                || holder.menuType != MenuType.ANVIL_EDITOR) {
             return;
         }
 
-        event.setCancelled(true);
-        String input = PLAIN_TEXT.serialize(event.message());
-        Bukkit.getScheduler().runTask(plugin, () -> applyInput(player, pendingInput, input));
+        String value = event.getView().getRenameText();
+        if (value == null) {
+            value = "";
+        }
+
+        Setting setting = holder.pendingInput.setting;
+        boolean valid = setting.valueType != ValueType.SOUND || soundExists(value.trim());
+        List<Component> lore = new ArrayList<>();
+        if (valid) {
+            lore.add(line("Click to save this value.", NamedTextColor.YELLOW));
+            if (setting.valueType == ValueType.STRING && !value.isEmpty()) {
+                lore.add(Component.empty());
+                lore.add(renderConfigText(value, (Player) event.getView().getPlayer()));
+            }
+        } else {
+            lore.add(line("Enter a valid Minecraft sound key.", NamedTextColor.RED));
+        }
+
+        event.getView().setRepairCost(0);
+        event.setResult(item(valid ? Material.LIME_DYE : Material.BARRIER,
+                valid ? "Save" : "Invalid Sound", lore));
+    }
+
+    @EventHandler
+    public void onInventoryClose(InventoryCloseEvent event) {
+        if (!(event.getInventory().getHolder() instanceof ConfigInventoryHolder holder)
+                || holder.menuType != MenuType.ANVIL_EDITOR
+                || shuttingDown) {
+            return;
+        }
+
+        Player player = (Player) event.getPlayer();
+        if (completedAnvilEdits.remove(player.getUniqueId())) {
+            return;
+        }
+
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            if (player.isOnline() && !shuttingDown) {
+                openMenu(player, holder.pendingInput.returnMenu);
+            }
+        });
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        pendingInputs.remove(event.getPlayer().getUniqueId());
+        UUID playerId = event.getPlayer().getUniqueId();
+        completedAnvilEdits.remove(playerId);
+        bookEditor.cancel(playerId);
     }
 
     private void openMenu(Player player, MenuType menuType) {
@@ -189,45 +237,9 @@ public class ConfigGui implements Listener {
             inventory.setItem(BACK_SLOT, navigationItem(Material.BARRIER, "Close", "Close this menu."));
         } else {
             for (MenuSetting menuSetting : MENU_SETTINGS.get(menuType)) {
-                inventory.setItem(menuSetting.slot, settingItem(menuSetting.setting));
+                inventory.setItem(menuSetting.slot, settingItem(player, menuSetting.setting));
             }
             inventory.setItem(BACK_SLOT, navigationItem(Material.ARROW, "Back", "Return to the main menu."));
-        }
-
-        player.openInventory(inventory);
-    }
-
-    private void openListEditor(Player player, Setting setting, MenuType returnMenu, int requestedPage) {
-        List<String> values = plugin.getConfig().getStringList(setting.path);
-        int lastPage = values.isEmpty() ? 0 : (values.size() - 1) / LIST_PAGE_SIZE;
-        int page = Math.max(0, Math.min(requestedPage, lastPage));
-        ConfigInventoryHolder holder = new ConfigInventoryHolder(setting, returnMenu, page);
-        Inventory inventory = holder.getInventory();
-        fillBackground(inventory);
-
-        int firstIndex = page * LIST_PAGE_SIZE;
-        int lastIndex = Math.min(firstIndex + LIST_PAGE_SIZE, values.size());
-        for (int index = firstIndex; index < lastIndex; index++) {
-            inventory.setItem(index - firstIndex, item(setting.material, "Entry " + (index + 1), List.of(
-                    line(values.get(index).isEmpty() ? "<empty>" : abbreviate(values.get(index)), NamedTextColor.AQUA),
-                    Component.empty(),
-                    line("Left-click to edit.", NamedTextColor.YELLOW),
-                    line("Right-click to remove.", NamedTextColor.RED)
-            )));
-        }
-
-        if (page > 0) {
-            inventory.setItem(LIST_PREVIOUS_SLOT, navigationItem(Material.ARROW, "Previous Page", "View earlier entries."));
-        }
-        inventory.setItem(LIST_ADD_SLOT, navigationItem(Material.LIME_DYE, "Add Entry", "Add another value."));
-        inventory.setItem(LIST_BACK_SLOT, navigationItem(Material.ARROW, "Back", "Return to the previous menu."));
-        inventory.setItem(LIST_CLEAR_SLOT, item(Material.BARRIER, "Clear All", List.of(
-                line("Remove every entry from this list.", NamedTextColor.GRAY),
-                Component.empty(),
-                line("Shift-click to clear.", NamedTextColor.RED)
-        )));
-        if (page < lastPage) {
-            inventory.setItem(LIST_NEXT_SLOT, navigationItem(Material.ARROW, "Next Page", "View later entries."));
         }
 
         player.openInventory(inventory);
@@ -241,132 +253,73 @@ public class ConfigGui implements Listener {
             player.sendMessage(Component.text(setting.displayName + " " + (newValue ? "enabled." : "disabled."),
                     newValue ? NamedTextColor.GREEN : NamedTextColor.RED));
             openMenu(player, returnMenu);
-            return;
-        }
-
-        if (setting.valueType == ValueType.STRING_LIST) {
-            openListEditor(player, setting, returnMenu, 0);
-            return;
-        }
-
-        beginInput(player, new PendingInput(setting, returnMenu, InputAction.SET_VALUE, -1, 0));
-    }
-
-    private void handleListEditorClick(Player player, InventoryClickEvent event, ConfigInventoryHolder holder) {
-        Setting setting = holder.listSetting;
-        List<String> values = new ArrayList<>(plugin.getConfig().getStringList(setting.path));
-        int slot = event.getRawSlot();
-        int valueIndex = holder.page * LIST_PAGE_SIZE + slot;
-
-        if (slot < LIST_PAGE_SIZE && valueIndex < values.size()) {
-            if (event.isRightClick()) {
-                values.remove(valueIndex);
-                saveList(setting, values);
-                player.sendMessage(Component.text("Entry removed.", NamedTextColor.GREEN));
-                openListEditor(player, setting, holder.returnMenu, holder.page);
-            } else {
-                beginInput(player, new PendingInput(setting, holder.returnMenu, InputAction.EDIT_LIST_ENTRY,
-                        valueIndex, holder.page));
-            }
-            return;
-        }
-
-        switch (slot) {
-            case LIST_PREVIOUS_SLOT -> openListEditor(player, setting, holder.returnMenu, holder.page - 1);
-            case LIST_ADD_SLOT -> beginInput(player, new PendingInput(setting, holder.returnMenu,
-                    InputAction.ADD_LIST_ENTRY, -1, holder.page));
-            case LIST_BACK_SLOT -> openMenu(player, holder.returnMenu);
-            case LIST_CLEAR_SLOT -> {
-                if (event.isShiftClick()) {
-                    saveList(setting, List.of());
-                    player.sendMessage(Component.text(setting.displayName + " cleared.", NamedTextColor.GREEN));
-                    openListEditor(player, setting, holder.returnMenu, 0);
-                }
-            }
-            case LIST_NEXT_SLOT -> openListEditor(player, setting, holder.returnMenu, holder.page + 1);
-            default -> {
-            }
-        }
-    }
-
-    private void beginInput(Player player, PendingInput pendingInput) {
-        pendingInputs.put(player.getUniqueId(), pendingInput);
-        player.closeInventory();
-
-        if (pendingInput.action == InputAction.ADD_LIST_ENTRY) {
-            player.sendMessage(Component.text("Enter the new " + pendingInput.setting.displayName + " entry in chat.", NamedTextColor.YELLOW));
-        } else if (pendingInput.action == InputAction.EDIT_LIST_ENTRY) {
-            player.sendMessage(Component.text("Enter a replacement for entry " + (pendingInput.listIndex + 1) + " in chat.", NamedTextColor.YELLOW));
+        } else if (setting.valueType == ValueType.STRING_LIST) {
+            openBookEditor(player, new PendingInput(setting, returnMenu));
         } else {
-            player.sendMessage(Component.text("Enter a new value for " + pendingInput.setting.displayName + " in chat.", NamedTextColor.YELLOW));
+            openAnvilEditor(player, new PendingInput(setting, returnMenu));
         }
+    }
+
+    private void openBookEditor(Player player, PendingInput pendingInput) {
+        List<String> values = plugin.getConfig().getStringList(pendingInput.setting.path);
+        if (values.size() > VirtualBookEditor.MAX_PAGES) {
+            player.sendMessage(Component.text("This list has more than " + VirtualBookEditor.MAX_PAGES
+                    + " entries and cannot be edited safely in a book.", NamedTextColor.RED));
+            return;
+        }
+
+        player.closeInventory();
+        player.sendMessage(Component.text("Each book page is one " + pendingInput.setting.displayName + " entry.",
+                NamedTextColor.GRAY));
+        player.sendMessage(Component.text("Right-click the air once to open the client-side Book & Quill.",
+                NamedTextColor.AQUA));
+        player.sendMessage(Component.text("Done saves. Finalizing with Sign cancels without signing a real book.",
+                NamedTextColor.YELLOW));
+        bookEditor.open(player, values, result -> finishBookEdit(player, pendingInput, result));
+    }
+
+    private void finishBookEdit(Player player, PendingInput pendingInput, VirtualBookEditor.EditResult result) {
+        if (result.signed()) {
+            player.sendMessage(Component.text("No changes were saved.", NamedTextColor.YELLOW));
+        } else {
+            plugin.getConfig().set(pendingInput.setting.path, result.pages());
+            plugin.saveConfig();
+            player.sendMessage(Component.text(pendingInput.setting.displayName + " saved.", NamedTextColor.GREEN));
+        }
+        openMenu(player, pendingInput.returnMenu);
+    }
+
+    private void openAnvilEditor(Player player, PendingInput pendingInput) {
+        ConfigInventoryHolder holder = new ConfigInventoryHolder(pendingInput);
+        String currentValue = plugin.getConfig().getString(pendingInput.setting.path, "");
+        holder.getInventory().setItem(0, renameInputItem(pendingInput.setting.material, currentValue));
+        player.openInventory(holder.getInventory());
+    }
+
+    private void saveAnvilInput(Player player, PendingInput pendingInput, AnvilView anvilView) {
+        String value = anvilView.getRenameText();
+        if (value == null) {
+            value = "";
+        }
+        value = value.trim();
 
         if (pendingInput.setting.valueType == ValueType.SOUND) {
-            player.sendMessage(Component.text("Use a sound key such as minecraft:entity.experience_orb.pickup.", NamedTextColor.GRAY));
-            player.sendMessage(Component.text("Type cancel to return without saving.", NamedTextColor.GRAY));
-        } else {
-            player.sendMessage(Component.text("Type <empty> for an empty value or cancel to return without saving.", NamedTextColor.GRAY));
-        }
-    }
-
-    private void applyInput(Player player, PendingInput pendingInput, String input) {
-        if (!player.isOnline()) {
-            return;
-        }
-
-        Setting setting = pendingInput.setting;
-        if (input.equalsIgnoreCase("cancel")) {
-            player.sendMessage(Component.text("No changes were saved.", NamedTextColor.YELLOW));
-            returnToPendingMenu(player, pendingInput);
-            return;
-        }
-
-        String stringValue = input.equalsIgnoreCase("<empty>") ? "" : input.trim();
-        if (pendingInput.action == InputAction.SET_VALUE) {
-            if (setting.valueType == ValueType.SOUND) {
-                NamespacedKey soundKey = NamespacedKey.fromString(stringValue);
-                if (soundKey == null || Registry.SOUNDS.get(soundKey) == null) {
-                    pendingInputs.put(player.getUniqueId(), pendingInput);
-                    player.sendMessage(Component.text("That sound does not exist. Try another key or type cancel.", NamedTextColor.RED));
-                    return;
-                }
-                stringValue = soundKey.toString();
-            }
-
-            plugin.getConfig().set(setting.path, stringValue);
-        } else {
-            List<String> values = new ArrayList<>(plugin.getConfig().getStringList(setting.path));
-            if (pendingInput.action == InputAction.ADD_LIST_ENTRY) {
-                values.add(stringValue);
-            } else if (pendingInput.listIndex >= 0 && pendingInput.listIndex < values.size()) {
-                values.set(pendingInput.listIndex, stringValue);
-            } else {
-                player.sendMessage(Component.text("That entry no longer exists.", NamedTextColor.RED));
-                openListEditor(player, setting, pendingInput.returnMenu, pendingInput.page);
+            NamespacedKey soundKey = NamespacedKey.fromString(value);
+            if (soundKey == null || Registry.SOUNDS.get(soundKey) == null) {
+                player.sendMessage(Component.text("Enter a valid Minecraft sound key.", NamedTextColor.RED));
                 return;
             }
-            plugin.getConfig().set(setting.path, values);
+            value = soundKey.toString();
         }
 
+        plugin.getConfig().set(pendingInput.setting.path, value);
         plugin.saveConfig();
-        player.sendMessage(Component.text(setting.displayName + " saved.", NamedTextColor.GREEN));
-        returnToPendingMenu(player, pendingInput);
+        player.sendMessage(Component.text(pendingInput.setting.displayName + " saved.", NamedTextColor.GREEN));
+        completedAnvilEdits.add(player.getUniqueId());
+        openMenu(player, pendingInput.returnMenu);
     }
 
-    private void returnToPendingMenu(Player player, PendingInput pendingInput) {
-        if (pendingInput.action == InputAction.SET_VALUE) {
-            openMenu(player, pendingInput.returnMenu);
-        } else {
-            openListEditor(player, pendingInput.setting, pendingInput.returnMenu, pendingInput.page);
-        }
-    }
-
-    private void saveList(Setting setting, List<String> values) {
-        plugin.getConfig().set(setting.path, values);
-        plugin.saveConfig();
-    }
-
-    private ItemStack settingItem(Setting setting) {
+    private ItemStack settingItem(Player player, Setting setting) {
         List<Component> lore = new ArrayList<>();
         if (setting.valueType == ValueType.BOOLEAN) {
             boolean enabled = plugin.getConfig().getBoolean(setting.path);
@@ -376,20 +329,54 @@ public class ConfigGui implements Listener {
         } else if (setting.valueType == ValueType.STRING_LIST) {
             List<String> values = plugin.getConfig().getStringList(setting.path);
             lore.add(line(values.size() + (values.size() == 1 ? " entry" : " entries"), NamedTextColor.AQUA));
-            values.stream().limit(2).forEach(value -> lore.add(line("• " + abbreviate(value), NamedTextColor.GRAY)));
+            values.stream().limit(2).forEach(value -> lore.add(
+                    Component.text("• ", NamedTextColor.GRAY).append(renderConfigText(value, player))));
             if (values.size() > 2) {
                 lore.add(line("• ...", NamedTextColor.GRAY));
             }
             lore.add(Component.empty());
-            lore.add(line("Click to manage.", NamedTextColor.YELLOW));
+            lore.add(line("Click to edit in a virtual book.", NamedTextColor.YELLOW));
         } else {
             String value = plugin.getConfig().getString(setting.path, "");
-            lore.add(line(value.isEmpty() ? "<empty>" : abbreviate(value), NamedTextColor.AQUA));
+            lore.add(value.isEmpty()
+                    ? line("<empty>", NamedTextColor.GRAY)
+                    : setting.valueType == ValueType.SOUND
+                    ? line(abbreviate(value), NamedTextColor.AQUA)
+                    : renderConfigText(value, player));
             lore.add(Component.empty());
-            lore.add(line("Click to edit.", NamedTextColor.YELLOW));
+            lore.add(line("Click to edit in an anvil.", NamedTextColor.YELLOW));
         }
 
         return item(setting.material, setting.displayName, lore);
+    }
+
+    private static ItemStack renameInputItem(Material material, String value) {
+        ItemStack input = new ItemStack(material);
+        ItemMeta meta = input.getItemMeta();
+        meta.displayName(Component.text(value).decoration(TextDecoration.ITALIC, false));
+        input.setItemMeta(meta);
+        return input;
+    }
+
+    private static Component renderConfigText(String value, Player player) {
+        if (value.isEmpty()) {
+            return line("<empty>", NamedTextColor.GRAY);
+        }
+
+        String preview = value.replace("%player%", player.getName());
+        try {
+            Component rendered = preview.contains("<")
+                    ? MiniMessage.miniMessage().deserialize(preview)
+                    : LegacyComponentSerializer.legacyAmpersand().deserialize(preview);
+            return rendered.decoration(TextDecoration.ITALIC, false);
+        } catch (RuntimeException exception) {
+            return line(abbreviate(value), NamedTextColor.GRAY);
+        }
+    }
+
+    private static boolean soundExists(String value) {
+        NamespacedKey soundKey = NamespacedKey.fromString(value);
+        return soundKey != null && Registry.SOUNDS.get(soundKey) != null;
     }
 
     private static ItemStack navigationItem(Material material, String name, String description) {
@@ -436,7 +423,7 @@ public class ConfigGui implements Listener {
         TITLES("Titles"),
         SOUNDS("Sounds"),
         BOOK("First Join Book"),
-        LIST_EDITOR("Edit List");
+        ANVIL_EDITOR("Edit Value");
 
         private final String title;
 
@@ -452,42 +439,31 @@ public class ConfigGui implements Listener {
         SOUND
     }
 
-    private enum InputAction {
-        SET_VALUE,
-        ADD_LIST_ENTRY,
-        EDIT_LIST_ENTRY
-    }
-
     private record Setting(String path, String displayName, Material material, ValueType valueType) {
     }
 
     private record MenuSetting(int slot, Setting setting) {
     }
 
-    private record PendingInput(Setting setting, MenuType returnMenu, InputAction action, int listIndex, int page) {
+    private record PendingInput(Setting setting, MenuType returnMenu) {
     }
 
     private static final class ConfigInventoryHolder implements InventoryHolder {
         private final MenuType menuType;
-        private final Setting listSetting;
-        private final MenuType returnMenu;
-        private final int page;
+        private final PendingInput pendingInput;
         private final Inventory inventory;
 
         private ConfigInventoryHolder(MenuType menuType) {
             this.menuType = menuType;
-            this.listSetting = null;
-            this.returnMenu = null;
-            this.page = 0;
+            this.pendingInput = null;
             this.inventory = Bukkit.createInventory(this, MENU_SIZE, Component.text(menuType.title));
         }
 
-        private ConfigInventoryHolder(Setting listSetting, MenuType returnMenu, int page) {
-            this.menuType = MenuType.LIST_EDITOR;
-            this.listSetting = listSetting;
-            this.returnMenu = returnMenu;
-            this.page = page;
-            this.inventory = Bukkit.createInventory(this, LIST_MENU_SIZE, Component.text(listSetting.displayName));
+        private ConfigInventoryHolder(PendingInput pendingInput) {
+            this.menuType = MenuType.ANVIL_EDITOR;
+            this.pendingInput = pendingInput;
+            this.inventory = Bukkit.createInventory(this, InventoryType.ANVIL,
+                    Component.text(pendingInput.setting.displayName));
         }
 
         @Override

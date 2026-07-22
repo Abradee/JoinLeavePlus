@@ -12,7 +12,10 @@ package me.abradee.joinLeavePlus.Commands;
 
 import me.abradee.joinLeavePlus.GUI.ConfigGui;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -28,7 +31,7 @@ public class JoinLeavePlusCommand implements CommandExecutor, TabCompleter {
 
     private final ConfigGui configGui;
 
-    public JoinLeavePlusCommand(ConfigGui configGui) {
+    public JoinLeavePlusCommand(@Nullable ConfigGui configGui) {
         this.configGui = configGui;
     }
 
@@ -47,6 +50,17 @@ public class JoinLeavePlusCommand implements CommandExecutor, TabCompleter {
 
         if (!player.hasPermission(CONFIG_PERMISSION)) {
             player.sendMessage(Component.text("You do not have permission to edit the configuration.", NamedTextColor.RED));
+            return true;
+        }
+
+        if (configGui == null) {
+            player.sendMessage(Component.text("ProtocolLib is required for the in-game configuration menu. ",
+                            NamedTextColor.RED)
+                    .append(Component.text("[Download ProtocolLib]", NamedTextColor.AQUA,
+                                    TextDecoration.UNDERLINED)
+                            .clickEvent(ClickEvent.openUrl("https://github.com/dmulloy2/ProtocolLib/releases/latest"))
+                            .hoverEvent(HoverEvent.showText(Component.text("Open the ProtocolLib download page",
+                                    NamedTextColor.YELLOW)))));
             return true;
         }
 

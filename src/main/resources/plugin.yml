@@ -5,7 +5,7 @@ api-version: '1.20.5'
 authors: [ abradee ]
 description: Plugin that changes the join/leave messages with a configured message.
 website: https://modrinth.com/plugins/joinleaveplus
-softdepend: [PlaceholderAPI]
+softdepend: [PlaceholderAPI, ProtocolLib]
 
 commands:
   joinleaveplus:
