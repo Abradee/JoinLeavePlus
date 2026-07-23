@@ -107,6 +107,6 @@ book-pages:
 ## Contributors
 Thanks to these people who have helped with the project!
 
-<a href="https://github.com/username/repository/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=username/repository" />
+<a href="https://github.com/Abradee/JoinLeavePlus/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Abradee/JoinLeavePlus" />
 </a>
