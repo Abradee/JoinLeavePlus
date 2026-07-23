@@ -36,7 +36,8 @@ Location:
 ```
 
 Default config: 
-```#    __     _     __                    _____ _
+```
+#    __     _     __                    _____ _
 # __|  |___|_|___|  |   ___ ___ _ _ ___|  _  | |_ _ ___
 #|  |  | . | |   |  |__| -_| .'| | | -_|   __| | | |_ -|
 #|_____|___|_|_|_|_____|___|__,|\_/|___|__|  |_|___|___|
@@ -100,4 +101,12 @@ book-author: "Server"
 book-pages:
   - "If you see this, report to your server administrator to either toggle the books off or write something here."
   - "If you see this, report to your server administrator to either toggle the books off or write something here."
-  - "If you see this, report to your server administrator to either toggle the books off or write something here."```
+  - "If you see this, report to your server administrator to either toggle the books off or write something here."
+```
+
+## Contributors
+Thanks to these people who have helped with the project!
+
+<a href="https://github.com/username/repository/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=username/repository" />
+</a>
