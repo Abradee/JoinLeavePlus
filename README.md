@@ -2,6 +2,8 @@
 
 JoinLeavePlus is a very easy to use and lightweight plugin for your Minecraft server that allows you to customize some events that happen when a player joins or leaves. It can change chat join messages, titles on join, sounds on join, and more to come! 
 
+*note: development is slowing down a little, but still will be developed, just slower.*
+
 ### First time join text
 
 ![First time join text](https://cdn.modrinth.com/data/cached_images/362ecae90501431517ca9bb4a7f550ec1997413f.png)
