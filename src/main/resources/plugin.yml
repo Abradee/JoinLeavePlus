@@ -9,8 +9,8 @@ softdepend: [PlaceholderAPI, ProtocolLib]
 
 commands:
   joinleaveplus:
-    description: Opens the in-game JoinLeavePlus configuration menu.
-    usage: /<command> config
+    description: JoinLeavePlus commands.
+    usage: /<command>
     aliases: [jlp]
   about-joinleaveplus:
     description: A command that displays a detailed about message about the plugin to the executor.

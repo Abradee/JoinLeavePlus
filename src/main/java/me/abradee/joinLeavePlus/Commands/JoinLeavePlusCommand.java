@@ -10,70 +10,84 @@
 
 package me.abradee.joinLeavePlus.Commands;
 
+import me.abradee.joinLeavePlus.Commands.SubCommands.ConfigCommand;
+import me.abradee.joinLeavePlus.Commands.SubCommands.ReloadCommand;
 import me.abradee.joinLeavePlus.GUI.ConfigGui;
+import me.abradee.joinLeavePlus.JoinLeavePlus;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class JoinLeavePlusCommand implements CommandExecutor, TabCompleter {
-    private static final String CONFIG_PERMISSION = "joinleaveplus.config";
 
-    private final ConfigGui configGui;
+    private final Map<String, SubCommand> subCommands = new LinkedHashMap<>();
 
-    public JoinLeavePlusCommand(@Nullable ConfigGui configGui) {
-        this.configGui = configGui;
+    public JoinLeavePlusCommand(JoinLeavePlus plugin, @Nullable ConfigGui configGui) {
+        // Register your subcommands here
+        registerSubCommand(new ConfigCommand(configGui));
+        registerSubCommand(new ReloadCommand(plugin));
+    }
+
+    private void registerSubCommand(SubCommand subCommand) {
+        subCommands.put(subCommand.getName().toLowerCase(), subCommand);
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
                              @NotNull String label, @NotNull String[] args) {
-        if (args.length != 1 || !args[0].equalsIgnoreCase("config")) {
-            sender.sendMessage(Component.text("Usage: /" + label + " config", NamedTextColor.YELLOW));
+
+        // When no arguments are provided, display the list of available commands
+        if (args.length == 0) {
+            sender.sendMessage(Component.text("--- JoinLeavePlus Commands ---", NamedTextColor.GOLD));
+            for (SubCommand sub : subCommands.values()) {
+                if (sub.getPermission() == null || sender.hasPermission(sub.getPermission())) {
+                    sender.sendMessage(Component.text(sub.getSyntax() + " ", NamedTextColor.YELLOW)
+                            .append(Component.text("- " + sub.getDescription(), NamedTextColor.GRAY)));
+                }
+            }
             return true;
         }
 
-        if (!(sender instanceof Player player)) {
-            sender.sendMessage(Component.text("The configuration menu can only be opened in-game.", NamedTextColor.RED));
-            return true;
+        // Find and run the subcommand
+        String subCommandName = args[0].toLowerCase();
+        SubCommand target = subCommands.get(subCommandName);
+
+        if (target != null) {
+            target.execute(sender, args);
+        } else {
+            sender.sendMessage(Component.text("Unknown subcommand. Use /" + label + " to see available commands.", NamedTextColor.RED));
         }
 
-        if (!player.hasPermission(CONFIG_PERMISSION)) {
-            player.sendMessage(Component.text("You do not have permission to edit the configuration.", NamedTextColor.RED));
-            return true;
-        }
-
-        if (configGui == null) {
-            player.sendMessage(Component.text("ProtocolLib is required for the in-game configuration menu. ",
-                            NamedTextColor.RED)
-                    .append(Component.text("[Download ProtocolLib]", NamedTextColor.AQUA,
-                                    TextDecoration.UNDERLINED)
-                            .clickEvent(ClickEvent.openUrl("https://github.com/dmulloy2/ProtocolLib/releases/latest"))
-                            .hoverEvent(HoverEvent.showText(Component.text("Open the ProtocolLib download page",
-                                    NamedTextColor.YELLOW)))));
-            return true;
-        }
-
-        configGui.open(player);
         return true;
     }
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
-                                                 @NotNull String alias, @NotNull String[] args) {
-        if (args.length == 1 && sender.hasPermission(CONFIG_PERMISSION)
-                && "config".startsWith(args[0].toLowerCase())) {
-            return List.of("config");
+                                                @NotNull String alias, @NotNull String[] args) {
+
+        // Auto-complete subcommand names for arg[0] based on player permissions
+        if (args.length == 1) {
+            List<String> completions = new ArrayList<>();
+            String currentInput = args[0].toLowerCase();
+
+            for (SubCommand sub : subCommands.values()) {
+                if (sub.getPermission() == null || sender.hasPermission(sub.getPermission())) {
+                    if (sub.getName().toLowerCase().startsWith(currentInput)) {
+                        completions.add(sub.getName());
+                    }
+                }
+            }
+            return completions;
         }
 
         return List.of();

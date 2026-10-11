@@ -10,11 +10,10 @@
 
 package me.abradee.joinLeavePlus;
 
+import me.abradee.joinLeavePlus.GUI.ConfigGui;
 import me.abradee.joinLeavePlus.Listeners.*;
 import me.abradee.joinLeavePlus.Commands.AboutCommand;
 import me.abradee.joinLeavePlus.Commands.JoinLeavePlusCommand;
-// import me.abradee.joinLeavePlus.GUI.ConfigGui;
-// import org.bukkit.command.PluginCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import de.clickism.modrinthupdatechecker.ModrinthUpdateChecker;
@@ -23,7 +22,7 @@ import java.util.Objects;
 
 
 public final class JoinLeavePlus extends JavaPlugin {
-    // private ConfigGui configGui;
+    private ConfigGui configGui;
     private boolean placeholderApiPresent = false;
 
     @Override
@@ -40,6 +39,12 @@ public final class JoinLeavePlus extends JavaPlugin {
             placeholderApiPresent = false;
             getLogger().warning("PlaceholderAPI not found. Disabling feature...");
         }
+        JoinLeavePlusCommand rootCommand = new JoinLeavePlusCommand(this, this.configGui);
+
+        if (getCommand("jlp") != null) {
+            getCommand("jlp").setExecutor(rootCommand);
+            getCommand("jlp").setTabCompleter(rootCommand);
+        }
 
         /* if (getServer().getPluginManager().isPluginEnabled("ProtocolLib")) {
             configGui = new ConfigGui(this);
@@ -47,11 +52,6 @@ public final class JoinLeavePlus extends JavaPlugin {
         } else {
             getLogger().warning("ProtocolLib was not found. The in-game configuration GUI is disabled.");
         } */
-
-        /* JoinLeavePlusCommand joinLeavePlusCommand = new JoinLeavePlusCommand(configGui);
-        PluginCommand command = Objects.requireNonNull(getCommand("joinleaveplus"), "joinleaveplus command is not registered");
-        command.setExecutor(joinLeavePlusCommand);
-        command.setTabCompleter(joinLeavePlusCommand); */
 
         getLogger().info("The plugin has started.");
         getLogger().info("Feel free to donate through https://patreon.com/abradee");
