@@ -24,6 +24,7 @@ import java.util.Objects;
 
 public final class JoinLeavePlus extends JavaPlugin {
     // private ConfigGui configGui;
+    private boolean placeholderApiPresent = false;
 
     @Override
     public void onEnable() {
@@ -32,11 +33,12 @@ public final class JoinLeavePlus extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new MainListener(), this);
         getCommand("about-joinleaveplus").setExecutor(new AboutCommand());
 
-        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            placeholderApiPresent = true;
             getLogger().info("PlaceholderAPI found! Hooked successfully.");
         } else {
+            placeholderApiPresent = false;
             getLogger().warning("PlaceholderAPI not found. Disabling feature...");
-            getServer().getPluginManager().disablePlugin(this);
         }
 
         /* if (getServer().getPluginManager().isPluginEnabled("ProtocolLib")) {
@@ -72,6 +74,10 @@ public final class JoinLeavePlus extends JavaPlugin {
                         getLogger().warning("Download it here: https://modrinth.com/plugin/joinleaveplus");
                     }
                 });
+    }
+
+    public boolean isPlaceholderApiPresent() {
+        return placeholderApiPresent;
     }
 
     @Override

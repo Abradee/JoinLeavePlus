@@ -16,6 +16,10 @@ public final class PAPIHook {
 
     private PAPIHook() {}
 
+    public static String apply(Player player, String message) {
+        return PlaceholderAPI.setPlaceholders(player, message);
+    }
+
     public static String parseToMiniMessage(Player player, String message) {
         Matcher matcher = PAPI_PATTERN.matcher(message);
         StringBuilder sb = new StringBuilder();
