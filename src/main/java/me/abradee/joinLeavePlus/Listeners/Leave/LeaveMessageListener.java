@@ -10,21 +10,35 @@
 
 package me.abradee.joinLeavePlus.Listeners.Leave;
 
+import me.abradee.joinLeavePlus.Hooks.PAPIHook;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bukkit.Bukkit;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class LeaveMessageListener {
     public static void handle(PlayerQuitEvent e, String name) {
-        java.util.List<String> leaveMessages = JavaPlugin.getProvidingPlugin(LeaveMessageListener.class).getConfig().getStringList("leave");
+        java.util.List<String> leaveMessages = JavaPlugin.getProvidingPlugin(LeaveMessageListener.class)
+                .getConfig()
+                .getStringList("leave");
         if (leaveMessages.isEmpty()) return;
 
         int leaveIndex = java.util.concurrent.ThreadLocalRandom.current().nextInt(leaveMessages.size());
         String msg = leaveMessages.get(leaveIndex).replace("%player%", name);
 
-        var leaveMessageSerializer = msg.contains("<")
-                ? net.kyori.adventure.text.minimessage.MiniMessage.miniMessage()
-                : net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacyAmpersand();
+        boolean papiEnabled = Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI");
 
-        e.quitMessage(leaveMessageSerializer.deserialize(msg));
+        if (msg.contains("<")) {
+            if (papiEnabled) {
+                msg = PAPIHook.parseToMiniMessage(e.getPlayer(), msg);
+            }
+            e.quitMessage(MiniMessage.miniMessage().deserialize(msg));
+        } else {
+            if (papiEnabled) {
+                msg = PAPIHook.apply(e.getPlayer(), msg);
+            }
+            e.quitMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(msg));
+        }
     }
 }
