@@ -17,7 +17,6 @@ import me.abradee.joinLeavePlus.Commands.JoinLeavePlusCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import de.clickism.modrinthupdatechecker.ModrinthUpdateChecker;
-
 import java.util.Objects;
 
 
@@ -46,12 +45,12 @@ public final class JoinLeavePlus extends JavaPlugin {
             getCommand("jlp").setTabCompleter(rootCommand);
         }
 
-        /* if (getServer().getPluginManager().isPluginEnabled("ProtocolLib")) {
+        if (getServer().getPluginManager().isPluginEnabled("ProtocolLib")) {
             configGui = new ConfigGui(this);
             getServer().getPluginManager().registerEvents(configGui, this);
         } else {
             getLogger().warning("ProtocolLib was not found. The in-game configuration GUI is disabled.");
-        } */
+        }
 
         getLogger().info("The plugin has started.");
         getLogger().info("Feel free to donate through https://patreon.com/abradee");
@@ -82,9 +81,9 @@ public final class JoinLeavePlus extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        /* if (configGui != null) {
+        if (configGui != null) {
             configGui.shutdown();
-        } */
+        }
         getLogger().info("The plugin has stopped.");
         getLogger().info("Thanks for using JoinLeavePlus!");
     }
