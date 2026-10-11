@@ -10,7 +10,7 @@
 
 package me.abradee.joinLeavePlus;
 
-import me.abradee.joinLeavePlus.GUI.ConfigGui;
+// import me.abradee.joinLeavePlus.GUI.ConfigGui;
 import me.abradee.joinLeavePlus.Listeners.*;
 import me.abradee.joinLeavePlus.Commands.AboutCommand;
 import me.abradee.joinLeavePlus.Commands.JoinLeavePlusCommand;
@@ -21,7 +21,7 @@ import java.util.Objects;
 
 
 public final class JoinLeavePlus extends JavaPlugin {
-    private ConfigGui configGui;
+    // private ConfigGui configGui;
     private boolean placeholderApiPresent = false;
 
     @Override
@@ -31,6 +31,15 @@ public final class JoinLeavePlus extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new MainListener(), this);
         getCommand("about-joinleaveplus").setExecutor(new AboutCommand());
 
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            placeholderApiPresent = true;
+            getLogger().info("PlaceholderAPI found! Hooked successfully.");
+        } else {
+            placeholderApiPresent = false;
+            getLogger().warning("PlaceholderAPI not found. Disabling feature...");
+        }
+
+        /*
         if (getServer().getPluginManager().isPluginEnabled("ProtocolLib")) {
             this.configGui = new ConfigGui(this);
             getServer().getPluginManager().registerEvents(this.configGui, this);
@@ -38,19 +47,14 @@ public final class JoinLeavePlus extends JavaPlugin {
         } else {
             getLogger().warning("ProtocolLib was not found. The in-game configuration GUI is disabled.");
         }
+        */
 
-        JoinLeavePlusCommand rootCommand = new JoinLeavePlusCommand(this, this.configGui);
+        // Passing null for ConfigGui while it is temporarily disabled
+        JoinLeavePlusCommand rootCommand = new JoinLeavePlusCommand(this, null);
 
         if (getCommand("jlp") != null) {
             getCommand("jlp").setExecutor(rootCommand);
             getCommand("jlp").setTabCompleter(rootCommand);
-        }
-
-        if (getServer().getPluginManager().isPluginEnabled("ProtocolLib")) {
-            configGui = new ConfigGui(this);
-            getServer().getPluginManager().registerEvents(configGui, this);
-        } else {
-            getLogger().warning("ProtocolLib was not found. The in-game configuration GUI is disabled.");
         }
 
         getLogger().info("The plugin has started.");
@@ -82,9 +86,11 @@ public final class JoinLeavePlus extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        /*
         if (configGui != null) {
             configGui.shutdown();
         }
+        */
         getLogger().info("The plugin has stopped.");
         getLogger().info("Thanks for using JoinLeavePlus!");
     }

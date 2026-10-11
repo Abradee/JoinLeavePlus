@@ -34,7 +34,7 @@ public class ReloadCommand implements SubCommand {
 
     @Override
     public String getSyntax() {
-        return "/joinleaveplus reload";
+        return "/jlp reload";
     }
 
     @Override

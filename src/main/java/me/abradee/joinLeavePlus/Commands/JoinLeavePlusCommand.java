@@ -33,8 +33,7 @@ public class JoinLeavePlusCommand implements CommandExecutor, TabCompleter {
     private final Map<String, SubCommand> subCommands = new LinkedHashMap<>();
 
     public JoinLeavePlusCommand(JoinLeavePlus plugin, @Nullable ConfigGui configGui) {
-        // Register your subcommands here
-        registerSubCommand(new ConfigCommand(configGui));
+        // registerSubCommand(new ConfigCommand(configGui));
         registerSubCommand(new ReloadCommand(plugin));
     }
 
@@ -46,7 +45,6 @@ public class JoinLeavePlusCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
                              @NotNull String label, @NotNull String[] args) {
 
-        // When no arguments are provided, display the list of available commands
         if (args.length == 0) {
             sender.sendMessage(Component.text("--- JoinLeavePlus Commands ---", NamedTextColor.GOLD));
             for (SubCommand sub : subCommands.values()) {
@@ -58,7 +56,6 @@ public class JoinLeavePlusCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        // Find and run the subcommand
         String subCommandName = args[0].toLowerCase();
         SubCommand target = subCommands.get(subCommandName);
 
@@ -75,7 +72,6 @@ public class JoinLeavePlusCommand implements CommandExecutor, TabCompleter {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
                                                 @NotNull String alias, @NotNull String[] args) {
 
-        // Auto-complete subcommand names for arg[0] based on player permissions
         if (args.length == 1) {
             List<String> completions = new ArrayList<>();
             String currentInput = args[0].toLowerCase();
