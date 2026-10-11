@@ -2,8 +2,6 @@
 
 JoinLeavePlus is a very easy to use and lightweight plugin for your Minecraft server that allows you to customize some events that happen when a player joins or leaves. It can change chat join messages, titles on join, sounds on join, and more to come! 
 
-*note: development is slowing down a little, but still will be developed, just slower.*
-
 ### First time join text
 
 ![First time join text](https://cdn.modrinth.com/data/cached_images/362ecae90501431517ca9bb4a7f550ec1997413f.png)
@@ -23,6 +21,9 @@ JoinLeavePlus is a very easy to use and lightweight plugin for your Minecraft se
 ## How to configure messages
 
 In JoinLeavePlus it is very simple to change the join/leave/first time join messages. You can EITHER use MiniMessage OR legacy color coding. Also, as of update 1.4 you can add multiple different messages to have them be randomized. If you don't want randomized messages, just set only one of them. This text can be configured differently if they have joined or not.
+
+And, as of 1.7, you can now use PlaceholderAPI in your join, leave, and first time join messages. You can do this by just downloading PlaceholderAPI (optional if you don't want this feature), and applying any placeholders you want in the config file. A further detailed tutorial for this is available at ([this website](https://abradee.github.io/joinleaveplus-papi/)) .
+
 
 ## How to configure titles
 
