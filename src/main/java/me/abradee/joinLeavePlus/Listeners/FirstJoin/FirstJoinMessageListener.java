@@ -38,7 +38,7 @@ public class FirstJoinMessageListener {
             if (papiEnabled) {
                 msg = PAPIHook.apply(e.getPlayer(), msg);
             }
-            e.joinMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(msg));
+            e.joinMessage(LegacyComponentSerializer.legacySection().deserialize(msg));
         }
     }
 }

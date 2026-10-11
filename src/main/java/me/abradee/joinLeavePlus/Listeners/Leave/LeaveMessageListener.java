@@ -38,7 +38,7 @@ public class LeaveMessageListener {
             if (papiEnabled) {
                 msg = PAPIHook.apply(e.getPlayer(), msg);
             }
-            e.quitMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(msg));
+            e.quitMessage(LegacyComponentSerializer.legacySection().deserialize(msg));
         }
     }
 }

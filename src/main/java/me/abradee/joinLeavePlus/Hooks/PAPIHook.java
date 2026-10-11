@@ -11,13 +11,16 @@ import java.util.regex.Pattern;
 
 public final class PAPIHook {
     private static final Pattern PAPI_PATTERN = Pattern.compile("[%]([^%]+)[%]");
-    private static final LegacyComponentSerializer LEGACY_SERIALIZER =
-            LegacyComponentSerializer.builder().character('&').hexColors().build();
+
+    // Serializer that parses section signs (§) AND hex colors
+    private static final LegacyComponentSerializer SECTION_SERIALIZER =
+            LegacyComponentSerializer.builder().character('§').hexColors().build();
 
     private PAPIHook() {}
 
     public static String apply(Player player, String message) {
-        return PlaceholderAPI.setPlaceholders(player, message);
+        String parsed = PlaceholderAPI.setPlaceholders(player, message);
+        return parsed.replace('&', '§');
     }
 
     public static String parseToMiniMessage(Player player, String message) {
@@ -27,10 +30,8 @@ public final class PAPIHook {
         while (matcher.find()) {
             String rawPlaceholder = matcher.group(0);
             String parsed = PlaceholderAPI.setPlaceholders(player, rawPlaceholder);
-
-            Component comp = LegacyComponentSerializer.legacySection().deserialize(
-                    LEGACY_SERIALIZER.deserialize(parsed).content()
-            );
+            String normalized = parsed.replace('&', '§');
+            Component comp = SECTION_SERIALIZER.deserialize(normalized);
             String miniMessageEquivalent = MiniMessage.miniMessage().serialize(comp);
 
             matcher.appendReplacement(sb, Matcher.quoteReplacement(miniMessageEquivalent));
