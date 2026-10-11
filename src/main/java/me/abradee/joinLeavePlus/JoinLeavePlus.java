@@ -31,13 +31,14 @@ public final class JoinLeavePlus extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new MainListener(), this);
         getCommand("about-joinleaveplus").setExecutor(new AboutCommand());
 
-        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            placeholderApiPresent = true;
-            getLogger().info("PlaceholderAPI found! Hooked successfully.");
+        if (getServer().getPluginManager().isPluginEnabled("ProtocolLib")) {
+            this.configGui = new ConfigGui(this);
+            getServer().getPluginManager().registerEvents(this.configGui, this);
+            getLogger().info("ProtocolLib found! In-game GUI enabled.");
         } else {
-            placeholderApiPresent = false;
-            getLogger().warning("PlaceholderAPI not found. Disabling feature...");
+            getLogger().warning("ProtocolLib was not found. The in-game configuration GUI is disabled.");
         }
+
         JoinLeavePlusCommand rootCommand = new JoinLeavePlusCommand(this, this.configGui);
 
         if (getCommand("jlp") != null) {
