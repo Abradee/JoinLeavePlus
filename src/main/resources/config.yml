@@ -31,14 +31,14 @@ first-time-join:
   - "<gold><b>[+] </b><aqua>%player% </aqua><light_purple>just started their grand adventure today!</light_purple>"
 
 join:
-  - "<green><b>[+] </b><green>%luckperms_prefix% %player% </green><gray>joined the game.</gray> <gradient:#55ff55:#ffffff>Hope they brought pizza!</gradient>"
-  - "<green><b>[+] </b><green>%luckperms_prefix% %player% </green><gray>entered the planet.</gray> <white>Good to see you!</white>"
-  - "<green><b>[+] </b><green>%luckperms_prefix% %player% </green><gradient:#55ff55:#ffff55>has successfully connected.</gradient> <gray>Ready for action!</gray>"
+  - "<green><b>[+] </b><green>%luckperms_prefix%%player% </green><gray>joined the game.</gray> <gradient:#55ff55:#ffffff>Hope they brought pizza!</gradient>"
+  - "<green><b>[+] </b><green>%luckperms_prefix%%player% </green><gray>entered the planet.</gray> <white>Good to see you!</white>"
+  - "<green><b>[+] </b><green>%luckperms_prefix%%player% </green><gradient:#55ff55:#ffff55>has successfully connected.</gradient> <gray>Ready for action!</gray>"
 
 leave:
-  - "<red><b>[-] </b><red>%luckperms_prefix% %player% </red><gray>has left the server.</gray> <gradient:#ff5555:#ffaa00>See you next time!</gradient>"
-  - "<red><b>[-] </b><red>%luckperms_prefix% %player% </red><gray>disconnected from the planet.</gray>"
-  - "<red><b>[-] </b><red>%luckperms_prefix% %player% </red><gradient:#ff5555:#ffffff>has vanished into thin air.</gradient>"
+  - "<red><b>[-] </b><red>%luckperms_prefix%%player% </red><gray>has left the server.</gray> <gradient:#ff5555:#ffaa00>See you next time!</gradient>"
+  - "<red><b>[-] </b><red>%luckperms_prefix%%player% </red><gray>disconnected from the planet.</gray>"
+  - "<red><b>[-] </b><red>%luckperms_prefix%%player% </red><gradient:#ff5555:#ffffff>has vanished into thin air.</gradient>"
 
 # TITLE MESSAGES
 join-title:
